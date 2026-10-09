@@ -7,7 +7,7 @@
 
 ## TL;DR
 
-1. **N'importe pas les brainrots existants** (Tung Tung Tung Sahur, Tralalero Tralala, Bombardiro…) ni des modèles extraits des maps de Ferins. Ces personnages font l'objet de litiges en cours, et un créateur Fortnite s'est déjà fait attaquer en justice pour une copie de « Steal a Brainrot » (détails en section 2).
+1. **Les brainrots ne sont pas « à personne », mais leur statut n'est pas tranché.** Les mèmes d'origine ont été générés par IA, et aux États-Unis une image 100 % IA n'est pas protégeable par le droit d'auteur. Mais une agence (Mementum) revendique 23 personnages, des marques sont déposées, et **Epic a lui-même pris une licence** pour vendre les skins Tung Tung Tung Sahur et Ballerina Cappuccina (avril 2026). Beaucoup de brainrots de tes captures ont en plus été créés par les studios eux-mêmes. Détail des risques par niveau en section 2.
 2. **Crée tes propres brainrots** en suivant la même formule : *objet du quotidien + animal + nom pseudo-italien*, en style voxel/blocky. Pars de bases **CC0** (Kenney *Cube Pets*, *Voxel Creature Pack* d'OpenGameArt, Quaternius) et retouche-les dans **MagicaVoxel / Blockbench / Blender**.
 3. **Le côté « glitchy / addictif » vient surtout des matériaux.** Un seul modèle × 6 mutations (Neon, Crystal, Void, Party, Dreamy, Black&White…) = 6 variantes pour presque rien. Tu fais un *master material* dans UEFN et une *material instance* par mutation.
 4. **Ajoute les boucles de jeu** visibles sur tes captures : raretés, timers « garanti », events tournants, rebirths, cash hors-ligne, leaderboard, annonces de spawn rare.
@@ -34,15 +34,30 @@
 
 *(Ceci n'est pas un avis juridique, juste ce que disent les sources.)*
 
-- **Steal the Brainrot (Ferins) est sous licence officielle.** Ferins déclare avoir une licence de Spyder Games/DoBig (le studio Roblox de *Steal a Brainrot*) et collaborer avec eux pour faire retirer les maps contrefaisantes. → [Pocket Tactics](https://www.pockettactics.com/fortnite/steal-the-brainrot-lawsuit), [Wikipedia](https://en.wikipedia.org/wiki/Steal_a_Brainrot)
-- **Octobre 2025 : procès contre une copie Fortnite.** Spyder Games a attaqué le créateur de la map Fortnite *Stealing Brainrots* pour « copie en gros » : artwork, assets, design. La plainte demande le retrait de la map, des dommages et une part des revenus. → [Gamewave (FR)](https://gamewave.fr/roblox/steal-a-brainrot-le-phenomene-roblox-attaque-fortnite-pour-plagiat/), [Aftermath](https://aftermath.site/brainrot-roblox-court/)
-- **Les personnages eux-mêmes sont disputés.** L'agence française Mementum Labs dit représenter les créateurs de Tung Tung Tung Sahur. Le personnage a été retiré de *Steal a Brainrot* en septembre 2025, puis remis le 29 novembre 2025 après un accord. Le litige continue aux États-Unis (demande reconventionnelle de juin 2026). → [Law Society Journal](https://lsj.com.au/articles/who-owns-brainrot/), [Wikipedia](https://en.wikipedia.org/wiki/Steal_a_Brainrot)
-- **Règles Epic.** Les *Island Creator Rules* interdisent le contenu qui viole des droits tiers. Le propriétaire de l'équipe est responsable même si c'est un coéquipier qui a importé l'asset. → [Island Creator Rules](https://www.epicgames.com/help/en-US/c-Category_CreatorPrograms/c-Trending_0/fortnite-island-creator-rules-a000094823), [Guide IP/DMCA](https://www.fortnite.com/news/intellectual-property-ip-and-dmca-guidelines-for-fortnite-island-creators)
+### 2.1 « Ce sont des mèmes du web, ils n'appartiennent à personne » : vrai en partie seulement
 
-**En pratique :**
-- ✅ Le *genre* (tycoon, raretés, mutations, monter pour trouver mieux) se réutilise largement, à condition de faire tes propres personnages, noms, UI et visuels.
-- ❌ Pas de modèles « Tung Tung », « Tralalero » etc. dans une map publiée, même achetés sur itch.io ou RenderHub. Certaines annonces précisent elles-mêmes « usage éditorial uniquement » ou « non affilié aux ayants droit ».
-- ❌ Pas d'extraction des modèles des maps de Ferins, et pas de copie 1:1 de leur UI ou de leurs noms.
+- **L'argument « IA = domaine public » existe, mais il n'est pas tranché.** Aux États-Unis, une œuvre générée entièrement par IA n'est pas protégeable par le droit d'auteur ([Thaler v. Perlmutter](https://www.loeb.com/en/insights/publications/2025/03/thaler-v-perlmutter), mars 2025). C'est exactement ce que plaide Spyder Games (studio de *Steal a Brainrot*). D'après eux, Tung Tung Tung Sahur est né de 7 prompts en 15 minutes. → [Dexerto](https://www.dexerto.com/roblox/tung-tung-sahur-is-at-the-center-of-a-bizarre-federal-custody-battle-over-brainrot-characters-3381733/)
+- **Mais quelqu'un revendique ces personnages.** L'agence française Mementum Labs dit représenter les créateurs (Noxa, Breno). Elle revendique Tung Tung Tung Sahur **et 22 autres brainrots**, à la fois par le droit d'auteur (noms, histoires, voix…) et par le droit des marques. Le procès est en cours aux États-Unis, sans décision à ce jour. → [GamesBeat](https://gamesbeat.com/the-battle-over-tung-tung-tung-sahur-is-testing-the-limits-of-copyright-and-trademark-law/), [Law Society Journal](https://lsj.com.au/articles/who-owns-brainrot/)
+- **Des marques sont déposées.** Aux États-Unis, une société a déposé « TUNG TUNG TUNG SAHUR » et « TRALALERO TRALALA » (jouets, mai 2025). Une autre entité a enregistré Tung Tung Tung Sahur comme marque dans l'UE. → [Trademarkia](https://www.trademarkia.com/news/intellectual-property-news/tung-tung-sahur-trademark), [USPTO 99171194](https://uspto.report/TM/99171194)
+- **Epic a pris une licence.** Les skins Tung Tung Tung Sahur et Ballerina Cappuccina vendus dans la boutique Fortnite (avril 2026) sont présentés comme un partenariat officiel avec Mementum. Concrètement, Epic traite Mementum comme l'ayant droit. → [GamesBeat](https://gamesbeat.com/the-battle-over-tung-tung-tung-sahur-is-testing-the-limits-of-copyright-and-trademark-law/), [Beebom](https://beebom.com/fortnite-tung-tung-tung-sahur-ballerina-cappuccina-skin/amp/)
+- **Beaucoup de brainrots de tes captures ne sont pas des mèmes du web.** Ils ont été inventés par les studios. Exemples : Strawberry Elephant (ajouté par les devs de *Steal a Brainrot* le 30 août 2025) et Chicleteira Bicicleteira (brainrot « Secret » du jeu Roblox). Ceux-là appartiennent clairement à leurs créateurs. → [Deltia's Gaming](https://deltiasgaming.com/how-to-get-og-strawberry-elephant-in-steal-a-brainrot-roblox), [The Backdash](https://thebackdash.com/gaming/chicleteira-bicicleteira-in-steal-a-brainrot-how-to-get-income-rate-and-more/)
+- **Les modèles 3D sont toujours protégés.** Même si le mème était libre, les modèles 3D faits par l'équipe de Ferins ou par Spyder sont leur travail. Les extraire ou les copier, c'est copier leur œuvre.
+
+### 2.2 Ce qui s'est déjà passé sur Fortnite
+
+- **Ferins (Steal the Brainrot) a une licence** pour le *jeu* Steal a Brainrot, accordée par Spyder Games/DoBig. Il dit aussi collaborer avec eux pour faire retirer les maps contrefaisantes. → [Pocket Tactics](https://www.pockettactics.com/fortnite/steal-the-brainrot-lawsuit)
+- **Octobre 2025 : procès contre une copie Fortnite.** Spyder Games a attaqué le créateur de *Stealing Brainrots* pour « copie en gros » (artwork, assets, design), en demandant le retrait, des dommages et une part des revenus. → [Gamewave (FR)](https://gamewave.fr/roblox/steal-a-brainrot-le-phenomene-roblox-attaque-fortnite-pour-plagiat/), [Aftermath](https://aftermath.site/brainrot-roblox-court/)
+- **Règles Epic.** Pas de contenu qui viole des droits tiers. Le propriétaire de l'équipe est responsable, et les sanctions vont du retrait de l'île jusqu'au ban du compte. → [Island Creator Rules](https://www.epicgames.com/help/en-US/c-Category_CreatorPrograms/c-Trending_0/fortnite-island-creator-rules-a000094823), [Guide IP/DMCA](https://www.fortnite.com/news/intellectual-property-ip-and-dmca-guidelines-for-fortnite-island-creators)
+
+### 2.3 Niveau de risque par type d'asset
+
+| Risque | Quoi | Pourquoi |
+|---|---|---|
+| 🔴 Élevé | Modèles extraits des maps de Ferins/Spyder ; brainrots inventés par les studios (Strawberry Elephant, Chicleteira…) ; copie 1:1 d'un jeu | Œuvres humaines clairement protégées, et précédent judiciaire sur Fortnite |
+| 🟠 Moyen | Tung Tung Tung Sahur, Ballerina Cappuccina, Tralalero Tralala et les autres « mèmes d'origine », **refaits par toi en 3D** | Statut juridique non tranché, Mementum et des déposants de marques actifs, Epic licencié |
+| 🟢 Faible | Tes propres brainrots dans le même style (section 7) | Le style et le genre ne sont pas protégeables en tant que tels |
+
+**Si tu veux quand même les mèmes d'origine :** fais tes propres modèles (ne les extrais jamais), et sache qu'une plainte peut faire retirer ton île. La voie propre est de demander une licence à Mementum, qui a déjà licencié Fortnite, Plants vs Brainrots, Pudgy Party et Brainrot Fight. → [Dexerto](https://www.dexerto.com/roblox/tung-tung-sahur-is-at-the-center-of-a-bizarre-federal-custody-battle-over-brainrot-characters-3381733/)
 
 ---
 
@@ -89,9 +104,9 @@ Packs Unreal pas confirmés compatibles UEFN (à tester, ou à prendre comme mod
 - Projet UEFN complet payant (157,50 $, licence restrictive) : [UEFN Academy sur Patreon](https://www.patreon.com/posts/steal-brainrot-144805173). ⚠️ Vérifie qu'il ne contient pas de personnages protégés avant de publier.
 - Méfie-toi des templates « steal brainrot » sur Fiverr : beaucoup réutilisent les personnages connus.
 
-### 3.E À ne PAS utiliser pour publier (référence visuelle seulement)
+### 3.E Modèles des mèmes d'origine (risque 🟠, voir section 2.3)
 
-Packs « Tralalero / Tung Sahur / Bombardiro » sur itch.io ([exemple](https://crtss.itch.io/brainrot-ai-meme-3d-model-pack-tralalero-tralala-bombardiro-crocodiro-tung-sahur)), RenderHub ou Sketchfab : voir section 2.
+Packs « Tralalero / Tung Sahur / Bombardiro » sur itch.io ([exemple](https://crtss.itch.io/brainrot-ai-meme-3d-model-pack-tralalero-tralala-bombardiro-crocodiro-tung-sahur)), RenderHub ou Sketchfab. La licence d'un modèle couvre le travail 3D de son auteur, **pas les droits sur le personnage**. Certaines annonces précisent d'ailleurs « usage éditorial uniquement ».
 
 ---
 
