@@ -255,20 +255,29 @@ def mrot(rot):
 # Grid
 # --------------------------------------------------------------------------
 
+SCALE = 1.0      # resolution multiplier used by new Grids (set per model by build.py)
+
+
 class Grid:
-    def __init__(self, n=N):
-        self.n = n
-        self.v = np.zeros((n, n, n), np.uint16)
+    """Voxel grid. Every coordinate passed to the API is in *design units*
+    (the 144^3 design space); the grid itself stores design * scale voxels so
+    a model can be rebuilt bigger and finer without touching its recipe."""
+
+    def __init__(self, n=N, scale=None):
+        self.s = float(SCALE if scale is None else scale)
+        self.n = int(math.ceil(n * self.s))
+        self.v = np.zeros((self.n, self.n, self.n), np.uint16)
 
     # ---- core -------------------------------------------------------------
     def _region(self, lo, hi):
-        lo = np.clip(np.floor(np.asarray(lo, float)).astype(int), 0, self.n - 1)
-        hi = np.clip(np.ceil(np.asarray(hi, float)).astype(int), 0, self.n - 1)
+        s = self.s
+        lo = np.clip(np.floor(np.asarray(lo, float) * s).astype(int), 0, self.n - 1)
+        hi = np.clip(np.ceil(np.asarray(hi, float) * s).astype(int), 0, self.n - 1)
         if np.any(hi < lo):
             return None
         sl = tuple(slice(l, h + 1) for l, h in zip(lo, hi))
-        X, Y, Z = np.meshgrid(*(np.arange(l, h + 1) for l, h in zip(lo, hi)), indexing="ij")
-        return sl, X, Y, Z
+        Xi, Yi, Zi = np.meshgrid(*(np.arange(l, h + 1) for l, h in zip(lo, hi)), indexing="ij")
+        return sl, Xi / s, Yi / s, Zi / s
 
     def _run(self, lo, hi, maskfn, mat, mode="add", where=None, only=None):
         r = self._region(lo, hi)
@@ -299,9 +308,13 @@ class Grid:
 
     # ---- primitives -------------------------------------------------------
     def box(self, p0, p1, mat, sym=False, **kw):
-        lo = np.minimum(p0, p1)
-        hi = np.maximum(p0, p1)
-        self._run(lo, hi, lambda X, Y, Z: np.ones(X.shape, bool), mat, **kw)
+        lo = np.minimum(p0, p1).astype(float)
+        hi = np.maximum(p0, p1).astype(float)
+
+        def f(X, Y, Z):
+            return ((X > lo[0] - 0.5) & (X < hi[0] + 0.5) & (Y > lo[1] - 0.5) & (Y < hi[1] + 0.5)
+                    & (Z > lo[2] - 0.5) & (Z < hi[2] + 0.5))
+        self._run(lo - 1, hi + 1, f, mat, **kw)
         if sym:
             self.box(mx(p0), mx(p1), mat, **kw)
 
@@ -349,10 +362,8 @@ class Grid:
         def f(X, Y, Z):
             lx, ly, lz = _local(X, Y, Z, c, R)
             t = lz / h
-            rr = r + (r2 - r) * t
-            rry = ry + (ry2 - ry) * t
-            rr = np.maximum(rr, 1e-6)
-            rry = np.maximum(rry, 1e-6)
+            rr = np.maximum(r + (r2 - r) * t, 1e-6)
+            rry = np.maximum(ry + (ry2 - ry) * t, 1e-6)
             return (t >= 0) & (t <= 1) & ((lx / rr) ** 2 + (ly / rry) ** 2 <= 1.0)
         self._run(c - m - abs(h), c + m + abs(h), f, mat, **kw)
         if sym:
@@ -439,36 +450,41 @@ class Grid:
         return pts
 
     # ---- surface tools ----------------------------------------------------
+    def _gi(self, d):
+        return int(np.clip(round(d * self.s), 0, self.n - 1))
+
     def front_y(self, x, z):
-        x, z = int(round(x)), int(round(z))
-        col = np.nonzero(self.v[x, :, z])[0]
-        return int(col[0]) if len(col) else None
+        col = np.nonzero(self.v[self._gi(x), :, self._gi(z)])[0]
+        return col[0] / self.s if len(col) else None
 
     def top_z(self, x, y):
-        x, y = int(round(x)), int(round(y))
-        col = np.nonzero(self.v[x, y, :])[0]
-        return int(col[-1]) if len(col) else None
+        col = np.nonzero(self.v[self._gi(x), self._gi(y), :])[0]
+        return col[-1] / self.s if len(col) else None
+
+    def column_z(self, x, y):
+        """Design z of every filled cell in the column (x, y)."""
+        return np.nonzero(self.v[self._gi(x), self._gi(y), :])[0] / self.s
 
     def decal(self, ar, br, fn, mat, direction="-y", depth=1, sym=False, only=None):
         """Paint the first filled voxels seen from a direction.
-        ar/br: inclusive ranges on the two plane axes
+        ar/br: inclusive ranges on the two plane axes, design units
         ('-y'/'+y': x,z   '-x'/'+x': y,z   '+z'/'-z': x,y). fn(A, B) -> mask."""
-        a = np.arange(int(math.floor(ar[0])), int(math.ceil(ar[1])) + 1)
-        b = np.arange(int(math.floor(br[0])), int(math.ceil(br[1])) + 1)
+        s = self.s
+        a = np.arange(int(math.floor(ar[0] * s)), int(math.ceil(ar[1] * s)) + 1)
+        b = np.arange(int(math.floor(br[0] * s)), int(math.ceil(br[1] * s)) + 1)
         a = a[(a >= 0) & (a < self.n)]
         b = b[(b >= 0) & (b < self.n)]
+        if len(a) == 0 or len(b) == 0:
+            return
         A, B = np.meshgrid(a, b, indexing="ij")
-        m = fn(A, B)
+        m = fn(A / s, B / s)
         axis = {"-y": 1, "+y": 1, "-x": 0, "+x": 0, "+z": 2, "-z": 2}[direction]
         if axis == 1:
-            sub = self.v[a[0]:a[-1] + 1, :, b[0]:b[-1] + 1]
-            filled = np.moveaxis(sub > 0, 1, 2)
+            filled = np.moveaxis(self.v[a[0]:a[-1] + 1, :, b[0]:b[-1] + 1] > 0, 1, 2)
         elif axis == 0:
-            sub = self.v[:, a[0]:a[-1] + 1, b[0]:b[-1] + 1]
-            filled = np.moveaxis(sub > 0, 0, 2)
+            filled = np.moveaxis(self.v[:, a[0]:a[-1] + 1, b[0]:b[-1] + 1] > 0, 0, 2)
         else:
-            sub = self.v[a[0]:a[-1] + 1, b[0]:b[-1] + 1, :]
-            filled = sub > 0
+            filled = self.v[a[0]:a[-1] + 1, b[0]:b[-1] + 1, :] > 0
         rev = direction in ("+y", "+x", "+z")
         if rev:
             filled = filled[..., ::-1]
@@ -478,9 +494,9 @@ class Grid:
             first = self.n - 1 - first
         sel0 = m & has
         allowed = PALETTE.indices_of(only if isinstance(only, (list, tuple)) else [only]) if only else None
-        for d in range(depth):
-            s = first + (-d if rev else d)
-            ai, bi, si = A[sel0], B[sel0], s[sel0]
+        for d in range(max(1, int(round(depth * s)))):
+            st = first + (-d if rev else d)
+            ai, bi, si = A[sel0], B[sel0], st[sel0]
             ok = (si >= 0) & (si < self.n)
             ai, bi, si = ai[ok], bi[ok], si[ok]
             if axis == 1:
@@ -496,17 +512,54 @@ class Grid:
             X, Y, Z = X[keep], Y[keep], Z[keep]
             if len(X) == 0:
                 continue
-            idx = mat_indices(mat, X, Y, Z)
+            idx = mat_indices(mat, X / s, Y / s, Z / s)
             self.v[X, Y, Z] = idx
         if sym and axis in (1, 2):
             def fm(A2, B2):
                 return fn(2 * CX - A2, B2)
             self.decal((2 * CX - ar[1], 2 * CX - ar[0]), br, fm, mat, direction, depth, False, only)
 
+    def plate(self, ar, br, fn, mat, thick=1.0, sym=False, gap=0.0, ymax=None):
+        """Stick a raised plate on the front surface (-y): for every (x, z)
+        where fn is true, add voxels in front of the surface. Good for visors,
+        glasses lenses, masks, badges."""
+        s = self.s
+        a = np.arange(int(math.floor(ar[0] * s)), int(math.ceil(ar[1] * s)) + 1)
+        b = np.arange(int(math.floor(br[0] * s)), int(math.ceil(br[1] * s)) + 1)
+        a = a[(a >= 0) & (a < self.n)]
+        b = b[(b >= 0) & (b < self.n)]
+        A, B = np.meshgrid(a, b, indexing="ij")
+        m = fn(A / s, B / s)
+        filled = np.moveaxis(self.v[a[0]:a[-1] + 1, :, b[0]:b[-1] + 1] > 0, 1, 2)
+        has = filled.any(axis=2)
+        first = filled.argmax(axis=2)
+        sel = m & has
+        if ymax is not None:
+            sel &= first <= ymax * s
+        t = max(1, int(round(thick * s)))
+        g0 = int(round(gap * s))
+        for k in range(1, t + 1):
+            Y = first[sel] - g0 - k
+            X, Z = A[sel], B[sel]
+            ok = Y >= 0
+            X, Y, Z = X[ok], Y[ok], Z[ok]
+            idx = mat_indices(mat, X / s, Y / s, Z / s)
+            self.v[X, Y, Z] = idx
+        if sym:
+            def fm(A2, B2):
+                return fn(2 * CX - A2, B2)
+            self.plate((2 * CX - ar[1], 2 * CX - ar[0]), br, fm, mat, thick, False, gap, ymax)
+
     def front_ellipse(self, x, z, rx, rz, mat, depth=1, sym=False, only=None, direction="-y"):
         self.decal((x - rx - 1, x + rx + 1), (z - rz - 1, z + rz + 1),
                    lambda A, B: ((A - x) / rx) ** 2 + ((B - z) / rz) ** 2 <= 1.0,
                    mat, direction=direction, depth=depth, sym=sym, only=only)
+
+    def lift(self, dz):
+        """Move everything up by dz design units (to put a body on legs)."""
+        k = int(round(dz * self.s))
+        self.v[:, :, k:] = self.v[:, :, :self.n - k].copy()
+        self.v[:, :, :k] = 0
 
     def bbox(self):
         nz = np.nonzero(self.v)

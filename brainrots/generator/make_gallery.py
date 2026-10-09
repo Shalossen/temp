@@ -12,6 +12,15 @@ WEB = os.path.join(ROOT, "web")
 
 def main():
     roster = json.load(open(os.path.join(ROOT, "roster.json"), encoding="utf-8"))
+    import sys
+    sys.path.insert(0, HERE)
+    from roster import ROSTER  # keep texts in sync with the recipes
+    texts = {r["num"]: r for r in ROSTER}
+    for r in roster:
+        r["concept"] = texts[r["num"]]["concept"]
+        r["income"] = texts[r["num"]]["income"]
+    with open(os.path.join(ROOT, "roster.json"), "w", encoding="utf-8") as f:
+        json.dump(roster, f, ensure_ascii=False, indent=1)
     for sub in ("thumbs", "glb", "tex/mutations"):
         os.makedirs(os.path.join(WEB, sub), exist_ok=True)
     for r in roster:

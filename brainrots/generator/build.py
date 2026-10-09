@@ -19,7 +19,11 @@ import numpy as np  # noqa: E402
 
 from meshing import MUTATIONS, crop, greedy_mesh, palette_size, write_palette_textures, write_vox  # noqa: E402
 from roster import ROSTER  # noqa: E402
+import vox  # noqa: E402
 from vox import CX, PALETTE  # noqa: E402
+
+# rarer = bigger and more detailed (resolution multiplier of the design grid)
+SCALE = {"Common": 1.4, "Rare": 1.5, "Epic": 1.6, "Legendary": 1.7, "Mythic": 1.8, "Divine": 1.9, "Secret": 2.0}
 
 ROOT = os.path.abspath(os.path.join(HERE, ".."))
 
@@ -42,9 +46,11 @@ def main():
     built = []
     for item in sorted(ROSTER, key=lambda r: r["num"]):
         t = time.time()
+        vox.SCALE = SCALE[item["rarity"]]
         g = item["build"]()
         v, lo = crop(g.v)
-        built.append((item, v, lo))
+        built.append((item, v, lo, g.s))
+        del g
         print("built %2d %-28s %s voxels=%d (%.1fs)" % (item["num"], item["name"], v.shape,
                                                         int(np.count_nonzero(v)), time.time() - t))
     entries = PALETTE.entries
@@ -65,7 +71,7 @@ def main():
     cam = None if args.no_render else B.setup_render_scene(res=args.res, samples=args.samples)
 
     meta = []
-    for item, v, lo in built:
+    for item, v, lo, s_ in built:
         if only and item["num"] not in only:
             continue
         s = slug(item["name"])
@@ -75,7 +81,7 @@ def main():
         write_vox(os.path.join(out, "%s.vox" % s), v, entries)
         verts, quads, pals = greedy_mesh(v)
         # pivot: centre of the symmetry plane in x, centre of depth in y, ground in z
-        origin = (CX - lo[0] + 0.5, v.shape[1] / 2.0, 0.0)
+        origin = (CX * s_ - lo[0] + 0.5, v.shape[1] / 2.0, 0.0)
         obj = B.build_object("SM_Brainrot_%s" % s, verts, quads, pals, entries, side, material, origin)
         B.export(obj, os.path.join(out, "%s.glb" % s), os.path.join(out, "%s.fbx" % s))
         tris = len(quads) * 2

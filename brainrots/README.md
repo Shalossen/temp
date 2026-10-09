@@ -2,7 +2,7 @@
 
 ![Les 30 brainrots](previews/roster_sheet.jpg)
 
-Trente personnages créés pour ta map, dans le style voxel des jeux « brainrot ». La formule est la même : **objet du quotidien + animal + nom pseudo-italien**. Aucun ne reprend un personnage existant (Tung Tung, Tralalero, Strawberry Elephant…). Fais quand même une recherche rapide sur les noms avant de publier, l'univers brainrot est immense.
+Trente personnages créés pour ta map, dans le style voxel des jeux « brainrot ». La formule est la même : **objet du quotidien + animal + nom pseudo-italien**. Chacun a son attitude : lunettes de soleil (cœur, étoile, aviateur, œil de chat), chaînes en or à médaillon, casquette à l'envers, haut-de-forme, toque de chef, casque de chantier, casquette de police ou de capitaine, visière cyber, yeux qui brillent, auréoles… Plus la rareté est haute, plus le modèle est grand et détaillé. Aucun ne reprend un personnage existant (Tung Tung, Tralalero, Strawberry Elephant…). Fais quand même une recherche rapide sur les noms avant de publier, l'univers brainrot est immense.
 
 Chaque modèle est livré en :
 
@@ -60,7 +60,7 @@ Toutes les UV d'un même voxel pointent au centre d'un seul pixel de la palette.
    - **Generate Missing Collision** : coché
    - **Material Import Method** : `Do Not Create Material`. Ensuite, assigne `M_Brainrot` à chaque mesh. Tu peux aussi laisser UEFN créer les matériaux, mais tu en auras 30 copies identiques.
 3. **Pivot** : au sol, au centre du personnage, ce qui le pose directement sur un piédestal.
-4. **Échelle** : 1 voxel = 7,5 cm. Les tailles vont de 2 m (communs) à 7 m (Secret), comme dans les jeux où les rares sont plus gros.
+4. **Échelle** : 1 voxel = 6 cm, et la résolution augmente avec la rareté (×1,4 pour les communs, ×2 pour le Secret). Les tailles vont d'environ 2,5 m (petits communs) à près de 11 m (Secret), comme dans les jeux où les rares sont les plus imposants. Tu peux les réduire dans UEFN avec l'échelle du prop.
 5. **Orientation** : dans Blender, chaque brainrot regarde vers −Y. Si l'un d'eux est de dos ou de profil dans UEFN, fais-lui une rotation de 90° ou 180° en Z.
 
 ### 4. Les mutations
@@ -85,7 +85,7 @@ Pour les mutations animées (arc-en-ciel *Party*, *Glitch*), voir la section 4 d
 
 ### Performances
 
-Entre 2 500 et 15 000 triangles par modèle grâce au *greedy meshing* (fusion des faces de même couleur). La palette ne pèse que 32 × 32 pixels.
+Entre 5 000 et 45 000 triangles par modèle grâce au *greedy meshing* (fusion des faces de même couleur). La palette ne pèse que 32 × 32 pixels. Pour les plus gros (Mythic, Divine, Secret), active **Nanite** sur le mesh dans UEFN.
 
 ---
 
@@ -103,7 +103,8 @@ python3 cards.py --mutations 14     # cartes + planche + démo des mutations
 ```
 
 - Chaque brainrot est une fonction dans `generator/roster.py`. Couleurs, tailles et accessoires se changent en quelques lignes.
-- `generator/vox.py` est le moteur voxel : sphères, cylindres, tubes, peinture, décalques.
+- `generator/vox.py` est le moteur voxel : sphères, cylindres, tubes, peinture, décalques. Il travaille en « unités de design » et `build.py` multiplie la résolution selon la rareté (table `SCALE`).
+- `generator/parts.py` contient le kit de style (lunettes, chapeaux, chaînes, baskets, yeux lumineux…) réutilisable pour en créer d'autres.
 - Tu peux aussi ouvrir n'importe quel `.vox` dans MagicaVoxel pour le retoucher à la main.
 
 La police des cartes, *Lilita One*, est sous licence SIL Open Font License (`generator/fonts/OFL.txt`). Elle ne sert qu'aux images d'aperçu.

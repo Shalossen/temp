@@ -8,7 +8,7 @@ from mathutils import Vector
 
 from meshing import EMIT_MAX, palette_uv
 
-VOXEL_M = 0.075   # 1 voxel = 7.5 cm  (60 voxels ~ 4.5 m)
+VOXEL_M = 0.06    # 1 voxel = 6 cm (a common ~5 m tall, the Secret ~10 m)
 
 
 def reset_scene():

@@ -11,6 +11,9 @@ from parts import (BLACK, BLUSH, CHROME_DARK, EYE_WHITE, FLAME_O, FLAME_R, FLAME
                    TOOTH, WATER, WHITE, WOOD, WOOD_LIGHT, YELLOW_BEAK, bird_foot, blush,
                    coil_along, cone_spikes, dot_eye, eye, glitch_bands, leg, open_mouth, smile,
                    sparkle)
+from parts import (EMERALD, LENS_DARK, RUBY, SAPPHIRE, _shape_mask, beret, bow_tie, brows, cap, chef_hat,
+                   crown, glow_eyes, goggles, gold_chain, halo, hard_hat, headphones, music_note, mustache,
+                   party_hat, peaked_cap, scarf, shades, shower_cap, sneaker, straw_hat, top_hat, visor, zzz)
 from vox import (CX, CY, PALETTE, Grid, Mat, _hash3, angular, bands, checker, hue_mats, speckle,
                  stripes)
 
@@ -57,7 +60,7 @@ Y = CY
 # COMMON
 # ============================================================================
 @brainrot(1, "Lampadino Pinguino", "Common", "$5/s",
-          "Pingouin dont la tête est une ampoule allumée, vissée à la place du cou.")
+          "Pingouin-génie dont la tête est une ampoule allumée ; lunettes rondes et nœud papillon.")
 def lampadino_pinguino():
     g = Grid()
     navy = Mat("peng_navy", (44, 52, 84), rough=0.55, shades=2, amt=0.05)
@@ -84,11 +87,13 @@ def lampadino_pinguino():
     smile(g, C, 37.5, 2.5, curve=1.2, only=[bulb])
     g.decal((C + 6, C + 10), (49, 56), lambda A, B: ((A - (C + 8)) / 1.2) ** 2 + ((B - 52.5) / 2.6) ** 2 <= 1,
             SHINE, only=[bulb])
+    shades(g, C - 5, 46.2, 4.5, 4.5, Mat("nerd_frame", (30, 30, 36), rough=0.3), lens=None, rim=0.8, thick=0.8)
+    bow_tie(g, (C, Y - 8.2, 28.5), 3.0, Mat("bowtie_red", (226, 36, 52), rough=0.4), Mat("bowtie_knot", (180, 20, 40), rough=0.4))
     return g
 
 
 @brainrot(2, "Gommarello Ranocchio", "Common", "$8/s",
-          "Grenouille-gomme bicolore (rose et bleue), un coin déjà usé.")
+          "Grenouille-gomme bicolore, casquette à l'envers et dent en or.")
 def gommarello_ranocchio():
     g = Grid()
     pink = Mat("eraser_pink", (246, 120, 150), rough=0.85)
@@ -114,11 +119,14 @@ def gommarello_ranocchio():
         y = Y - 14 + rng.uniform(-6, 4)
         g.box((x, y, 0), (x + rng.integers(0, 2), y + rng.integers(0, 2), rng.integers(0, 2)),
               pink if rng.random() < 0.6 else blue)
+    cap(g, (C, Y + 3, 20.5), 6.2, Mat("cap_red", (232, 48, 60), rough=0.5),
+        brim_mat=Mat("cap_dark", (40, 40, 52), rough=0.5), backwards=True)
+    g.decal((C + 1.5, C + 3.5), (8.4, 9.8), lambda A, B: np.ones(A.shape, bool), GOLD, only=[pink, blue])
     return g
 
 
 @brainrot(3, "Spugnetta Lumachina", "Common", "$12/s",
-          "Escargot menthe dont la coquille est une éponge de cuisine qui fait des bulles.")
+          "Escargot amoureux (yeux en cœur) dont la coquille est une éponge qui fait des bulles.")
 def spugnetta_lumachina():
     g = Grid()
     mint = Mat("snail_mint", (140, 222, 192), rough=0.45, shades=2, amt=0.04)
@@ -157,11 +165,16 @@ def spugnetta_lumachina():
     for p, r in (((C + 13, Y - 4, 31), 3.0), ((C + 16, Y - 7, 39), 2.0), ((C - 14, Y + 2, 34), 2.4),
                  ((C + 9, Y + 4, 38), 1.5)):
         g.sphere(p, r, bubble)
+    heart = Mat("heart_eye", (255, 40, 110), rough=0.2, emit=0.8)
+    for cx in (C - 6.5, C + 6.5):
+        g.decal((cx - 3, cx + 3), (39, 45), _shape_mask("heart", cx, 41.8, 2.3, 2.1), heart,
+                only=[PUPIL, SHINE, EYE_WHITE])
+    g.decal((C - 1.2, C + 1.2), (19.8, 22), lambda A, B: (A - C) ** 2 + (B - 21) ** 2 <= 1.4, TONGUE, only=[mint])
     return g
 
 
 @brainrot(4, "Pomodorino Granchietto", "Common", "$18/s",
-          "Crabe-tomate cerise : pinces de crabe, yeux sur pédoncules, feuilles vertes sur la tête.")
+          "Crabe-tomate chef cuisinier : toque, moustache et sourcils froncés.")
 def pomodorino_granchietto():
     g = Grid()
     red = Mat("tomato_red", (234, 54, 44), rough=0.3, shades=2, amt=0.05, scale=3)
@@ -186,11 +199,14 @@ def pomodorino_granchietto():
         g.tube([(C - 12, yy, 9), (C - 17, yy + 1, 7), (C - 19.5, yy + 2, 0.8)], [1.5, 1.3, 1.0], crab, sym=True)
     open_mouth(g, C, 13, 3.6, 3.0, teeth=False, only=[red])
     blush(g, C - 9, 14.5, rx=2.0, rz=1.1, only=[red])
+    chef_hat(g, (C, Y + 2, 25.5), 5.6, 6, WHITE)
+    mustache(g, C, 17, 5.2, Mat("mustache", (44, 30, 30), rough=0.6))
+    brows(g, C - 5.5, 35.8, 2.4, Mat("crab_brow", (120, 30, 20), rough=0.5), tilt=0.5, ymax=Y - 10)
     return g
 
 
 @brainrot(5, "Ombrellino Pipistrello", "Common", "$25/s",
-          "Chauve-souris dont les ailes sont un parapluie rayé ; la poignée sert de queue.")
+          "Chauve-souris vampire en haut-de-forme, yeux rouges lumineux ; ses ailes sont un parapluie.")
 def ombrellino_pipistrello():
     g = Grid()
     fur = Mat("bat_fur", (96, 72, 126), rough=0.7, shades=2, amt=0.06)
@@ -206,7 +222,6 @@ def ombrellino_pipistrello():
     g.front_ellipse(C, 30, 6.5, 5, face)
     g.cyl((C - 5.5, Y, 36), 3.2, 9, fur, r2=0.5, rot=(0, -22, 0), sym=True)
     g.cyl((C - 5.6, Y - 1.4, 37), 1.8, 6.5, ear_in, r2=0.3, rot=(0, -22, 0), mode="paint", sym=True)
-    eye(g, C - 3.4, 31.5, r=3.0, pupil=0.6)
     smile(g, C, 27.5, 2.6, curve=1.1, only=[face])
     for sx in (C - 1.2, C + 1.2):
         y0 = g.front_y(sx, 26.5)
@@ -229,11 +244,14 @@ def ombrellino_pipistrello():
             [1.5, 1.5, 1.5, 1.5, 1.5], handle)
     g.seg((C - 3, Y, 9), (C - 3.5, Y - 1, 2.5), 1.5, fur, sym=True)
     g.ell((C - 3.5, Y - 2.5, 1.4), (2.1, 3, 1.4), rib, sym=True)
+    glow_eyes(g, C - 3.4, 31.5, 2.7, 1.9, Mat("bat_glow", (255, 40, 50), rough=0.2, emit=3.0), tilt=0.45)
+    top_hat(g, (C, Y - 1, 38.3), 3.8, 6.5, Mat("tophat_black", (28, 26, 34), rough=0.35),
+            Mat("tophat_band", (150, 50, 220), rough=0.35))
     return g
 
 
 @brainrot(6, "Candelino Gufetto", "Common", "$35/s",
-          "Bébé hibou en cire de bougie, flamme sur la tête, posé sur un bougeoir doré.")
+          "Bébé hibou en cire de bougie qui s'endort sur son bougeoir doré.")
 def candelino_gufetto():
     g = Grid()
     wax = Mat("wax", (250, 238, 214), rough=0.45, shades=2, amt=0.03)
@@ -256,7 +274,7 @@ def candelino_gufetto():
     g.ell((C, Y, 38), (4.6, 4.6, 7.8), bands("z", [(0, FLAME_Y), (39, FLAME_O), (43.5, FLAME_R)]))
     g.cyl((C - 7, Y - 1, 29.5), 2.8, 6, wax, r2=0.4, rot=(0, -28, 0), sym=True)
     g.front_ellipse(C - 4.7, 19, 4.8, 5, ring, sym=True)
-    eye(g, C - 4.7, 19, r=3.8, iris=iris, pupil=0.42)
+    eye(g, C - 4.7, 19, r=3.8, iris=iris, pupil=0.42, lid=0.48, lid_mat=wax)
     g.cyl((C, Y - 10, 15.5), 1.9, 3.8, ORANGE_BEAK, axis="-y", r2=0.5)
     for z in (6.5, 10):
         for xc in (C - 3, C + 3):
@@ -265,6 +283,10 @@ def candelino_gufetto():
                     vmark, only=[wax])
     g.ell((C - 10, Y + 1, 13), (2.3, 5, 8.5), wax, rot=(0, -10, 0), sym=True)
     bird_foot(g, C - 4, Y - 8.5, ORANGE_BEAK, z=3.2, toe=2.6, r=0.9)
+    zmat = Mat("zzz_purple", (180, 140, 255), rough=0.3, emit=1.5)
+    zzz(g, C + 13, Y - 4, 37, 1.6, zmat)
+    zzz(g, C + 17, Y - 5, 43, 1.1, zmat)
+    zzz(g, C + 20, Y - 6, 47.5, 0.8, zmat)
     return g
 
 
@@ -272,7 +294,7 @@ def candelino_gufetto():
 # RARE
 # ============================================================================
 @brainrot(7, "Ventilatore Pavone", "Rare", "$60/s",
-          "Paon bleu dont la roue de plumes est un ventilateur de bureau.")
+          "Paon diva : roue-ventilateur, lunettes œil de chat et collier en or.")
 def ventilatore_pavone():
     g = Grid()
     blue = Mat("peacock_blue", (32, 92, 214), rough=0.4, shades=2, amt=0.06)
@@ -314,11 +336,14 @@ def ventilatore_pavone():
     g.cyl((C, Y - 12, 38.5), 1.4, 3.2, YELLOW_BEAK, axis="-y", r2=0.3)
     g.seg((C - 3, Y - 1, 7), (C - 3, Y - 2, 1), 0.9, leg_m, sym=True)
     bird_foot(g, C - 3, Y - 2, leg_m, z=0.8, toe=2.8, r=0.8)
+    shades(g, C - 2.6, 40.8, 2.3, 1.7, Mat("diva_frame", (255, 255, 255), rough=0.25),
+           lens=Mat("diva_lens", (120, 40, 140), rough=0.05), style="cat", rim=0.6, thick=0.7, ymax=Y - 9)
+    gold_chain(g, (C, Y - 5.5, 30), 4.2, 4.2, drop=2.2, r=0.7, step=1.3)
     return g
 
 
 @brainrot(8, "Lavatricino Polpetto", "Rare", "$90/s",
-          "Pieuvre qui sort du hublot d'une machine à laver, une chaussette dans un tentacule.")
+          "Pieuvre en bonnet de douche qui sort du hublot d'une machine à laver.")
 def lavatricino_polpetto():
     g = Grid()
     body = Mat("washer_white", (238, 240, 246), rough=0.35)
@@ -359,11 +384,12 @@ def lavatricino_polpetto():
         g.sphere(p, r, foam)
     for p, r in (((C - 15, Y - 6, 30), 2.4), ((C - 18, Y - 9, 37), 1.6), ((C + 18, Y - 4, 40), 1.8)):
         g.sphere(p, r, bubble)
+    shower_cap(g, (C, Y - 10, 26), 8.2, Mat("shower_cap", (150, 205, 255), rough=0.4), WHITE)
     return g
 
 
 @brainrot(9, "Microondino Riccio", "Rare", "$140/s",
-          "Hérisson dont le corps est un micro-ondes allumé ; ses piquants brillent comme des braises.")
+          "Hérisson-micro-ondes debout en baskets, piquants brûlants comme des braises.")
 def microondino_riccio():
     g = Grid()
     case = Mat("micro_case", (232, 236, 242), rough=0.35)
@@ -383,8 +409,6 @@ def microondino_riccio():
     for zz in (9, 12, 15):
         for xx in (C + 9, C + 12):
             g.decal((xx, xx + 1), (zz, zz + 1), lambda A, B: np.ones(A.shape, bool), btn)
-    for xx, yy in ((C - 11, Y - 6), (C - 11, Y + 10)):
-        g.ell((xx, yy, 1.6), (2.6, 3.2, 1.8), skin, sym=True)
     pts = []
     for xx in np.arange(C - 14, C + 14.1, 4.6):
         for yy in np.arange(Y - 2, Y + 12.1, 4.6):
@@ -401,11 +425,17 @@ def microondino_riccio():
     eye(g, C - 3.4, 30.5, r=2.5, pupil=0.62)
     g.sphere((C - 6.5, Y - 4, 33), 1.9, skin, sym=True)
     smile(g, C, 25.5, 2.4, curve=0.9, only=[skin])
+    brows(g, C - 3.4, 33.6, 2.2, Mat("hedgehog_brow", (80, 50, 34), rough=0.6), tilt=0.5, ymax=Y - 9)
+    g.lift(13)
+    for s in (-1, 1):
+        g.seg((C + s * 6.5, Y + 2, 17), (C + s * 7, Y + 2, 5), 2.3, skin)
+    sneaker(g, C - 7, Y + 6, 0, 10, 3.6, 5.6, Mat("kick_cyan", (40, 200, 235), rough=0.4),
+            Mat("kick_orange", (255, 140, 40), rough=0.4))
     return g
 
 
 @brainrot(10, "Sveglia Coniglietta", "Rare", "$200/s",
-          "Lapine-réveil : cadran pour visage, cloches dorées et longues oreilles.")
+          "Lapine-réveil en baskets roses et lunettes étoiles.")
 def sveglia_coniglietta():
     g = Grid()
     case = Mat("clock_case", (250, 140, 178), rough=0.3, metal=0.2)
@@ -439,14 +469,17 @@ def sveglia_coniglietta():
         g.decal((C - 11, C - 6.5), (zz, zz), lambda A, B: np.ones(A.shape, bool), tick, sym=True, only=[face])
     blush(g, C - 7, 19.5, rx=1.8, rz=1.0, only=[face])
     g.seg((C - 6, Y, 10), (C - 6.5, Y - 3, 4), 1.6, GOLD, sym=True)
-    g.ell((C - 6.5, Y - 6, 2.5), (3.8, 6.5, 2.5), fur, sym=True)
     g.ell((C - 14.8, Y - 3, 19), (2.4, 2.7, 3.3), fur, sym=True)
     g.sphere((C, Y + 8, 15), 4.2, fur)
+    sneaker(g, C - 6.5, Y + 2, 0, 9.5, 3.4, 5.2, Mat("kick_pink", (255, 110, 170), rough=0.4),
+            Mat("kick_white", (255, 255, 255), rough=0.4))
+    shades(g, C - 4.3, 25.6, 3.5, 3.5, Mat("star_frame", (255, 214, 40), rough=0.25, metal=0.6),
+           lens=Mat("star_lens", (60, 20, 90), rough=0.05), style="star", rim=0.7)
     return g
 
 
 @brainrot(11, "Pennellone Volpino", "Rare", "$300/s",
-          "Renard malin dont la queue est un gros pinceau trempé dans la peinture bleue.")
+          "Renard artiste : béret, écharpe rayée et queue-pinceau trempée dans la peinture.")
 def pennellone_volpino():
     g = Grid()
     fox = Mat("fox_orange", (242, 122, 42), rough=0.6, shades=3, amt=0.05)
@@ -481,11 +514,15 @@ def pennellone_volpino():
     for (x, y, r, m) in ((C - 10, Y - 13, 3.2, pb), (C + 9, Y - 14, 2.6, py), (C + 2, Y - 18, 1.9, pp),
                          (C + 19, Y + 14, 2.4, pb)):
         g.cyl((x, y, 0), r, 1, m)
+    beret(g, (C - 1, Y - 2, 39.2), 5.4, Mat("beret_red", (200, 34, 56), rough=0.6))
+    scarf(g, (C, Y - 1, 25.5), 8, 7, 1.6, Mat("scarf_teal", (30, 176, 176), rough=0.7), tail_dir=-1, tail_len=8,
+          stripe=WHITE)
+    g.front_ellipse(C + 5.6, 30, 1.3, 0.8, pb, only=[fw, fox])
     return g
 
 
 @brainrot(12, "Innaffiatoio Elefantino", "Rare", "$450/s",
-          "Bébé éléphant-arrosoir : sa trompe est le bec verseur, une fleur pousse sur son dos.")
+          "Bébé éléphant-arrosoir en chapeau de paille ; sa trompe est le bec verseur.")
 def innaffiatoio_elefantino():
     g = Grid()
     can = Mat("can_green", (70, 182, 122), rough=0.3, metal=0.5)
@@ -524,6 +561,8 @@ def innaffiatoio_elefantino():
         a = math.radians(k * 72 + 90)
         g.sphere((C + 4 + 2.4 * math.cos(a), Y + 2.5, 31 + 2.4 * math.sin(a)), 1.8, petal)
     g.sphere((C + 4, Y + 1.8, 31), 1.4, center)
+    straw_hat(g, (C, Y - 9, 23.6), 5, Mat("straw", (240, 206, 120), rough=0.8, shades=2, amt=0.06, scale=1),
+              Mat("hat_ribbon", (230, 60, 90), rough=0.5), flower=petal)
     return g
 
 
@@ -531,7 +570,7 @@ def innaffiatoio_elefantino():
 # EPIC
 # ============================================================================
 @brainrot(13, "Telefonino Fenicottero", "Epic", "$1.2K/s",
-          "Flamant rose sur une patte : corps en téléphone à cadran, cou en fil spiralé, combiné en guise d'ailes.")
+          "Flamant rose diva : corps en téléphone à cadran, cou en fil spiralé, lunettes cœur et perles.")
 def telefonino_fenicottero():
     g = Grid()
     pink = Mat("flamingo_pink", (250, 130, 170), rough=0.5, shades=2, amt=0.05)
@@ -568,11 +607,15 @@ def telefonino_fenicottero():
     eye(g, C - 2.6, 60, r=2.0, pupil=0.62)
     g.ell((C - 13.5, Y + 3, 31), (2.2, 6.5, 4.2), pink, rot=(0, -10, 0), sym=True)
     g.ell((C, Y + 12.5, 34), (5, 3, 2.6), pink, rot=(-25, 0, 0))
+    shades(g, C - 2.4, 60.2, 2.1, 1.9, Mat("heart_frame", (255, 40, 140), rough=0.2),
+           lens=Mat("heart_lens", (110, 10, 60), rough=0.05), style="heart", rim=0.6, thick=0.7, ymax=Y - 4)
+    pearl = Mat("pearl", (250, 246, 240), rough=0.15, metal=0.2)
+    gold_chain(g, (C, Y - 2.5, 55.2), 4.0, 4.0, drop=0.8, r=0.75, mat=pearl, alt=pearl, step=1.4)
     return g
 
 
 @brainrot(14, "Jukeboxino Pappagallo", "Epic", "$1.8K/s",
-          "Perroquet ara qui sort d'un juke-box néon, ailes multicolores et notes de musique.")
+          "Perroquet rockstar sorti d'un juke-box néon : aviateurs dorés et chaîne à note de musique.")
 def jukeboxino_pappagallo():
     g = Grid()
     wood = Mat("juke_wood", (150, 74, 46), rough=0.32, shades=2, amt=0.05)
@@ -622,11 +665,18 @@ def jukeboxino_pappagallo():
         g.sphere((x, y, z), 1.6, m)
         g.seg((x + 1.4, y, z), (x + 1.4, y, z + 5), 0.5, m)
         g.seg((x + 1.4, y, z + 5), (x + 3.2, y, z + 4), 0.5, m)
+    shades(g, C - 3.6, 50.4, 2.9, 2.4, GOLD, style="aviator", rim=0.6, ymax=Y - 6)
+
+    def note(u, v):
+        return ((((u + 0.2) ** 2 + (v + 0.35) ** 2) <= 0.12) | ((np.abs(u - 0.12) <= 0.1) & (v >= -0.35) & (v <= 0.55))
+                | ((u >= 0.12) & (u <= 0.45) & (np.abs(v - 0.5 + (u - 0.12) * 0.6) <= 0.1)))
+    gold_chain(g, (C, Y - 1, 41.5), 8.6, 7.8, drop=6, r=0.9, medallion=GOLD, med_r=3.0, emblem=note,
+               emblem_mat=Mat("medal_black", (30, 26, 34), rough=0.3))
     return g
 
 
 @brainrot(15, "Aspirapolvere Formichiere", "Epic", "$2.5K/s",
-          "Fourmilier-aspirateur : corps de traîneau rouge sur roues, museau en tuyau ventilé, grosse queue touffue.")
+          "Fourmilier-aspirateur tuné : lunettes de course, aileron et pots d'échappement enflammés.")
 def aspirapolvere_formichiere():
     g = Grid()
     shell = Mat("vac_red", (234, 72, 58), rough=0.18)
@@ -667,11 +717,21 @@ def aspirapolvere_formichiere():
         g.box((x, y, z), (x + 1, y + 1, z + 1), dust)
     g.curve([(C + 4, Y + 21, 4), (C + 10, Y + 25, 1), (C + 15, Y + 19, 1), (C + 18, Y + 23, 1)], 0.8, BLACK)
     g.box((C + 18, Y + 23, 0), (C + 20, Y + 25, 2), WHITE)
+    goggles(g, C - 2.4, 20.6, 1.8, CHROME_DARK, Mat("goggle_lens", (255, 160, 40), rough=0.05, emit=0.8), BLACK,
+            head_c=(C, Y - 15, 20.6), head_r=4.9)
+    for s in (-1, 1):
+        g.seg((C + s * 5, Y + 12, 22.5), (C + s * 5, Y + 15.5, 27), 0.8, shell_d)
+        g.cyl((C + s * 6, Y + 19, 6.5), 1.7, 4.5, SILVER, axis="y")
+        g.ell((C + s * 6, Y + 25, 6.5), (1.6, 2.6, 1.6), bands("y", [(0, FLAME_Y), (Y + 25.5, FLAME_O)]))
+    g.rbox((C, Y + 16, 27.6), (9.5, 2.8, 0.9), shell_d, n=6)
+    g.rbox((C, Y + 16, 27.6), (9.6, 2.9, 1.0), shell, n=6, mode="paint", where=lambda X, Y_, Z: np.abs(X - C) > 7)
+    g.seg((C, Y - 6, 13.5), (C, Y + 12, 13.5), 10.7, WHITE, mode="paint",
+          where=lambda X, Y_, Z: (np.abs(np.abs(X - C) - 2.4) <= 0.8) & (Z > 19))
     return g
 
 
 @brainrot(16, "Cassettino Camaleonte", "Epic", "$3.6K/s",
-          "Caméléon-cassette rétro accroché à sa branche ; sa queue est la bande magnétique déroulée.")
+          "Caméléon-cassette rétro avec bandeau années 80 ; sa queue est la bande magnétique.")
 def cassettino_camaleonte():
     g = Grid()
     shell = Mat("cassette_shell", (38, 36, 48), rough=0.22)
@@ -725,11 +785,12 @@ def cassettino_camaleonte():
         rr = 7 * (1 - t) + 1.2
         pts.append((C + 22 + rr * math.cos(a), Y + 0.5, 18 + rr * math.sin(a) + 3 * (1 - t)))
     g.tube([(C + 19, Y, 14.5)] + pts, 0.9, tape)
+    g.torus((C, Y - 1, 42), 5.0, 1.0, stripes("z", 0.9, [Mat("sweat_pink", (255, 60, 150), rough=0.6), WHITE]))
     return g
 
 
 @brainrot(17, "Frullatore Medusina", "Epic", "$5K/s",
-          "Méduse phosphorescente posée comme un couvercle sur un mixeur rempli de smoothie.")
+          "Méduse fêtarde (chapeau pointu, yeux étoiles) posée sur un mixeur rempli de smoothie.")
 def frullatore_medusina():
     g = Grid()
     base = Mat("blender_base", (60, 64, 82), rough=0.3, metal=0.3)
@@ -777,11 +838,18 @@ def frullatore_medusina():
             aa = ar + 0.12 * math.sin(k * 1.1 + i)
             pts.append((C + rr * math.cos(aa), Y + rr * math.sin(aa), z))
         g.tube(pts, list(np.linspace(1.2, 0.6, len(pts))), t1 if i % 2 else t2)
+    party_hat(g, (C + 1, Y + 1, 48.6), 4.2, 9, [Mat("party_pink", (255, 70, 170), rough=0.4),
+              Mat("party_yellow", (255, 220, 40), rough=0.4), Mat("party_cyan", (40, 210, 240), rough=0.4)],
+              Mat("party_pom", (255, 255, 255), rough=0.5, emit=0.6))
+    star = Mat("star_eye", (255, 236, 80), rough=0.2, emit=2.5)
+    for cx in (C - 4.6, C + 4.6):
+        g.decal((cx - 3, cx + 3), (40, 46), _shape_mask("star", cx, 43, 2.2, 2.2), star,
+                only=[PUPIL, SHINE, EYE_WHITE])
     return g
 
 
 @brainrot(18, "Semaforino Giraffino", "Epic", "$7.5K/s",
-          "Girafe dont le long cou est un feu tricolore allumé (rouge, orange, vert).")
+          "Girafe policière dont le cou est un feu tricolore ; casquette et sifflet.")
 def semaforino_giraffino():
     g = Grid()
     gir = Mat("giraffe_yellow", (246, 202, 92), rough=0.6)
@@ -812,8 +880,6 @@ def semaforino_giraffino():
     g.ell((C, Y - 9.5, 66.3), (4.4, 3.6, 3.6), muzzle)
     g.front_ellipse(C - 1.6, 66.8, 0.7, 0.7, mane, sym=True)
     smile(g, C, 64.3, 2.2, curve=0.9, only=[muzzle])
-    g.seg((C - 2.6, Y - 1, 71.5), (C - 3.2, Y, 76), 0.9, gir, sym=True)
-    g.sphere((C - 3.2, Y, 76.5), 1.5, spot, sym=True)
     g.ell((C - 6.5, Y - 1, 69.5), (2.8, 1.2, 1.4), gir, rot=(0, 0, -20), sym=True)
     eye(g, C - 3.4, 69.2, r=2.3, pupil=0.62)
     rng = np.random.default_rng(18)
@@ -824,6 +890,11 @@ def semaforino_giraffino():
     for _ in range(10):
         p = (C + rng.uniform(-5, 5), Y - 3 + rng.uniform(-7, 7), 67.5 + rng.uniform(-3, 4))
         g.sphere(p, rng.uniform(1.0, 1.5), spot, mode="paint", only=[gir])
+    peaked_cap(g, (C, Y - 2.5, 71.4), 4.4, Mat("police_navy", (34, 44, 92), rough=0.5),
+               Mat("visor_black", (20, 20, 26), rough=0.15), GOLD,
+               band_mat=checker(1, [Mat("police_white", (240, 240, 245), rough=0.5), Mat("police_navy2", (34, 44, 92), rough=0.5)]),
+               h=3.0)
+    g.cyl((C + 2.8, Y - 12.4, 64.6), 0.9, 2.6, SILVER, axis="-y")
     return g
 
 
@@ -831,7 +902,7 @@ def semaforino_giraffino():
 # LEGENDARY
 # ============================================================================
 @brainrot(19, "Mongolfiera Balenotta", "Legendary", "$12K/s",
-          "Baleine-montgolfière rayée qui flotte sur des nuages, nacelle en osier et jet d'eau sur la tête.")
+          "Baleine-montgolfière pilote : lunettes d'aviateur, nacelle en osier et nuages.")
 def mongolfiera_balenotta():
     g = Grid()
     ga = Mat("balloon_red", (240, 84, 78), rough=0.5)
@@ -872,11 +943,13 @@ def mongolfiera_balenotta():
                  ((C + 13, Y - 1, 3.5), 4.5), ((C + 18, Y + 3, 3), 3.2), ((C + 9, Y + 10, 3), 3.6),
                  ((C - 2, Y + 12, 2.5), 3.4)):
         g.sphere(p, r, cloud)
+    goggles(g, C - 5, 55, 2.6, Mat("goggle_leather", (126, 74, 40), rough=0.7),
+            Mat("goggle_glass", (120, 220, 255), rough=0.05, emit=0.8), None)
     return g
 
 
 @brainrot(20, "Escavatore Mammuttone", "Legendary", "$18K/s",
-          "Mammouth laineux sur chenilles : sa trompe est un bras de pelleteuse jaune avec un godet.")
+          "Mammouth chef de chantier sur chenilles : casque orange, trompe en bras de pelleteuse.")
 def escavatore_mammuttone():
     g = Grid()
     fur = Mat("mammoth_fur", (130, 84, 52), rough=0.85, shades=3, amt=0.09, scale=1)
@@ -905,8 +978,6 @@ def escavatore_mammuttone():
     g.sphere((C, Y + 11, 47.5), 1.6, beacon)
     g.ell((C, Y - 10, 31), (10.5, 8.5, 10.5), fur)
     g.sphere((C, Y - 8, 41), 6, fur)
-    for dx in (-2, 0, 2):
-        g.seg((C + dx, Y - 8, 46), (C + dx * 1.6, Y - 9, 50), 0.7, fur_d)
     g.ell((C - 10.5, Y - 7, 33), (2.2, 4, 5), fur_d, sym=True)
     eye(g, C - 4.4, 33.5, r=2.8, pupil=0.6, lid=0.18, lid_mat=fur)
     g.curve([(C - 5, Y - 16, 25), (C - 8.5, Y - 22, 21), (C - 10, Y - 27, 24), (C - 9, Y - 29, 29)],
@@ -923,11 +994,13 @@ def escavatore_mammuttone():
         g.box((xx, Y - 42, 21), (xx + 1, Y - 41, 22), SILVER)
     for p in ((C - 2, Y - 38, 23.5), (C + 2, Y - 39, 24), (C, Y - 37.5, 25)):
         g.sphere(p, 1.6, stone)
+    hard_hat(g, (C, Y - 8, 44.2), 6.6, Mat("hardhat_orange", (255, 140, 24), rough=0.35))
+    brows(g, C - 4.4, 36.9, 2.6, fur_d, tilt=0.5, ymax=Y - 14)
     return g
 
 
 @brainrot(21, "Faro Pellicano", "Legendary", "$26K/s",
-          "Pélican-phare : tour rayée rouge et blanc, lanterne allumée, un poisson qui dépasse du bec.")
+          "Pélican capitaine sur son phare rayé, lanterne allumée, poisson dans le bec.")
 def faro_pellicano():
     g = Grid()
     red = Mat("lh_red", (226, 52, 52), rough=0.45)
@@ -971,11 +1044,13 @@ def faro_pellicano():
     g.ell((C - 5.5, Y - 13, 3.6), (3.4, 4.2, 1.1), pouch, sym=True)
     for p in ((C - 22, Y - 10, 40), (C + 21, Y - 6, 52), (C + 18, Y - 12, 30)):
         sparkle(g, p, 2, lamp)
+    peaked_cap(g, (C, Y + 0.5, 73.6), 5.6, WHITE, Mat("visor_black", (20, 20, 26), rough=0.15), GOLD,
+               band_mat=Mat("captain_navy", (30, 40, 80), rough=0.5), h=3.2)
     return g
 
 
 @brainrot(22, "Discopalla Armadillo", "Legendary", "$40K/s",
-          "Tatou roulé en boule à facettes de discothèque, lunettes de star roses et chaîne dorée.")
+          "Tatou boule disco : lunettes de star, chaîne en or et micro sur pied.")
 def discopalla_armadillo():
     g = Grid()
     mirror = Mat("mirror_tile", (212, 216, 228), rough=0.06, metal=1.0, shades=3, amt=0.2, scale=3, seed=5)
@@ -1021,11 +1096,20 @@ def discopalla_armadillo():
     for p, s in (((C - 25, Y - 8, 40), 2), ((C + 25, Y - 4, 46), 2), ((C - 22, Y - 14, 18), 1),
                  ((C + 20, Y - 16, 22), 1), ((C + 4, Y - 22, 46), 2), ((C - 14, Y - 10, 55), 1)):
         sparkle(g, p, s, star)
+    def star_emblem(u, v):
+        th = np.arctan2(v, u) - math.pi / 2
+        return np.sqrt(u * u + v * v) <= 0.45 + 0.4 * np.cos(5 * th) ** 2 * (np.cos(5 * th) > 0)
+    gold_chain(g, (C, Y - 13.5, 11.8), 5.6, 5.6, drop=1.6, r=0.75, medallion=GOLD, med_r=2.2, emblem=star_emblem,
+               emblem_mat=frame)
+    g.cyl((C + 11, Y - 22, 0), 3, 0.8, CHROME_DARK)
+    g.seg((C + 11, Y - 22, 0.5), (C + 11, Y - 22, 15), 0.6, SILVER)
+    g.seg((C + 11, Y - 22, 15), (C + 9, Y - 23.5, 17), 0.6, SILVER)
+    g.sphere((C + 8.6, Y - 24, 17.8), 1.9, Mat("mic_mesh", (60, 60, 70), rough=0.4, metal=0.6, shades=2, amt=0.2, scale=1))
     return g
 
 
 @brainrot(23, "Arpa Cignetta", "Legendary", "$60K/s",
-          "Cygne couronné dont le long cou forme une harpe dorée aux cordes arc-en-ciel lumineuses.")
+          "Cygne couronné dont le cou forme une harpe dorée aux cordes arc-en-ciel lumineuses.")
 def arpa_cignetta():
     g = Grid()
     sw = Mat("swan_white", (250, 250, 248), rough=0.55, shades=2, amt=0.03)
@@ -1059,13 +1143,15 @@ def arpa_cignetta():
     g.curve(bar, 1.7, GOLD)
     g.torus((C, Y - 1, 55.5), 2.2, 0.8, GOLD, axis="x")
     for k, yy in enumerate(range(Y - 4, Y + 16, 3)):
-        low = np.nonzero(g.v[C, yy, :24])[0]
-        high = np.nonzero(g.v[C, yy, 25:])[0]
+        zs = g.column_z(C, yy)
+        low, high = zs[zs < 24], zs[zs > 25]
         if not len(low) or not len(high):
             continue
-        g.seg((C, yy, low[-1] + 1), (C, yy, 25 + high[0] - 1), 0.5, strings[k % len(strings)])
+        g.seg((C, yy, low[-1] + 1), (C, yy, high[0] - 1), 0.5, strings[k % len(strings)])
     for p in ((C - 20, Y - 6, 30), (C + 18, Y - 10, 44), (C + 22, Y + 4, 24)):
         sparkle(g, p, 1, strings[3])
+    for (x, y, z, k) in ((C - 17, Y - 8, 46, 0), (C + 15, Y - 12, 54, 2), (C + 19, Y - 2, 36, 4), (C - 20, Y + 2, 30, 5)):
+        music_note(g, x, y, z, 1.4, strings[k])
     return g
 
 
@@ -1073,7 +1159,7 @@ def arpa_cignetta():
 # MYTHIC
 # ============================================================================
 @brainrot(24, "Vulcanetto Triceratopo", "Mythic", "$95K/s",
-          "Tricératops qui porte un volcan en éruption sur le dos : lave lumineuse, fumée et braises.")
+          "Tricératops volcanique : yeux de lave, piques d'obsidienne et éruption sur le dos.")
 def vulcanetto_triceratopo():
     g = Grid()
     skin = Mat("trike_green", (76, 152, 118), rough=0.6, shades=3, amt=0.06)
@@ -1102,7 +1188,6 @@ def vulcanetto_triceratopo():
     g.cyl((C, Y - 23, 18), 3.6, 5, beakm, axis="-y", r2=1.4)
     g.curve([(C - 4.6, Y - 21, 29), (C - 5.6, Y - 26, 33.5), (C - 6.2, Y - 30, 39.5)], [2.3, 1.7, 0.7], horn, sym=True)
     g.cyl((C, Y - 24, 21.5), 1.9, 4.2, horn, r2=0.4, rot=(55, 0, 0))
-    eye(g, C - 5, 25, r=2.7, pupil=0.6)
     smile(g, C - 4.5, 16.5, 1.8, curve=-0.8, only=[skin])
     smile(g, C + 4.5, 16.5, 1.8, curve=-0.8, only=[skin])
     blush(g, C - 7, 21, rx=1.6, rz=0.9, only=[skin])
@@ -1124,11 +1209,20 @@ def vulcanetto_triceratopo():
     for _ in range(9):
         p = (C + rng.uniform(-11, 11), Y + 9 + rng.uniform(-8, 8), rng.uniform(52, 66))
         g.box(p, (p[0] + 1, p[1] + 1, p[2] + 1), lava_h if rng.random() < 0.5 else lava)
+    glow_eyes(g, C - 5, 25, 2.6, 1.7, Mat("lava_eye", (255, 150, 30), rough=0.2, emit=3.5), tilt=0.55, ymax=Y - 18)
+    obsidian = Mat("obsidian", (34, 28, 44), rough=0.2, shades=2, amt=0.12)
+    pts = [(C, Y + 22 + k * 3.2, 33.5 - k * 2.6) for k in range(5)]
+    cone_spikes(g, pts, obsidian, r=2.2, length=5, center=(C, Y + 20, 10), tip_mat=lava)
+    for d in ("-x", "+x"):
+        g.decal((Y - 8, Y + 22), (8, 26), lambda A, B: np.abs((B - 15) - 3.5 * np.sin((A - Y) * 0.45)) <= 0.45, lava,
+                direction=d, only=[skin, belly])
+    for s in (-1, 1):
+        g.seg((C + s * 6.2, Y - 30, 39.5), (C + s * 5.7, Y - 27, 35.5), 0.9, lava_h)
     return g
 
 
 @brainrot(25, "Disco Volante Axolotto", "Mythic", "$140K/s",
-          "Axolotl rose aux branchies fluo qui pilote une soucoupe volante posée sur son rayon tracteur.")
+          "Axolotl extraterrestre à visière cyber et antennes, aux commandes d'une soucoupe volante.")
 def disco_volante_axolotto():
     g = Grid()
     hull = Mat("ufo_hull", (198, 206, 222), rough=0.2, metal=1.0, shades=2, amt=0.05)
@@ -1172,11 +1266,15 @@ def disco_volante_axolotto():
     g.ell((C, Y + 12, 33), (0.8, 7.5, 5.2), gill_l, rot=(-10, 0, 0))
     for p in ((C - 28, Y - 6, 40), (C + 27, Y - 2, 46), (C + 22, Y - 14, 12), (C - 20, Y - 12, 8)):
         sparkle(g, p, 2 if p[2] > 20 else 1, lights[1])
+    visor(g, C - 10, C + 10, 39.8, 43.6, Mat("cyber_visor", (60, 240, 255), rough=0.1, emit=2.4), thick=1.0)
+    for s in (-1, 1):
+        g.seg((C + s * 3.5, Y - 1, 46.5), (C + s * 5.5, Y, 53), 0.5, SILVER)
+        g.sphere((C + s * 5.5, Y, 53.8), 1.3, lights[2])
     return g
 
 
 @brainrot(26, "Ghiacciolone Orso Polare", "Mythic", "$200K/s",
-          "Ours polaire en esquimau géant, croqué sur un coin, nappé de sirop bleu qui coule.")
+          "Ours polaire esquimau, lunettes de glace et écharpe, croqué sur un coin.")
 def ghiacciolone_orso_polare():
     g = Grid()
     ice = Mat("ice_white", (242, 248, 255), rough=0.14, shades=2, amt=0.03)
@@ -1214,11 +1312,16 @@ def ghiacciolone_orso_polare():
     for p, s in (((C - 22, Y - 6, 50), 2), ((C + 22, Y - 10, 40), 2), ((C - 19, Y - 12, 22), 1),
                  ((C + 18, Y + 2, 66), 1), ((C - 6, Y - 14, 66), 1)):
         sparkle(g, p, s, frost)
+    shades(g, C - 5.4, 48.8, 3.6, 2.4, Mat("ice_frame", (40, 90, 210), rough=0.2, metal=0.5),
+           lens=Mat("ice_lens", (150, 225, 255), rough=0.02, emit=0.5), style="square", rim=0.7)
+    scarf_m = stripes("z", 1.4, [Mat("scarf_red", (226, 40, 60), rough=0.7), WHITE])
+    g.rbox((C, Y, 34.5), (15.6, 8.6, 1.9), scarf_m, n=6)
+    g.curve([(C + 9, Y - 8.5, 33.5), (C + 10.5, Y - 9.5, 29), (C + 11.5, Y - 9, 25)], [1.5, 1.4, 1.3], scarf_m)
     return g
 
 
 @brainrot(27, "Razzo Gallinaccio", "Mythic", "$300K/s",
-          "Poule-fusée au décollage : ailes en ailerons, poussin au hublot, flammes et nuage de fumée.")
+          "Poule-fusée au décollage : regard déterminé, écharpe de pilote, poussin au hublot.")
 def razzo_gallinaccio():
     g = Grid()
     hen = Mat("hen_white", (250, 250, 246), rough=0.45, shades=2, amt=0.03)
@@ -1252,6 +1355,8 @@ def razzo_gallinaccio():
     g.ell((C, Y + 12.5, 30), (2, 7, 10), fin, rot=(25, 0, 0))
     g.seg((C - 6, Y - 5, 25), (C - 11, Y - 9, 4), 1.2, ORANGE_BEAK, sym=True)
     bird_foot(g, C - 11, Y - 9, ORANGE_BEAK, z=4, toe=3, r=0.9)
+    brows(g, C - 4.2, 68.6, 2.6, Mat("hen_brow", (60, 40, 40), rough=0.6), tilt=0.5)
+    scarf(g, (C, Y, 59.5), 10.9, 10.9, 1.4, Mat("pilot_scarf", (226, 46, 52), rough=0.7), tail_dir=1, tail_len=11)
     return g
 
 
@@ -1259,7 +1364,7 @@ def razzo_gallinaccio():
 # DIVINE
 # ============================================================================
 @brainrot(28, "Lampadario Fenicione", "Divine", "$650K/s",
-          "Phénix de feu aux ailes déployées, perché sur un lustre doré en cristal garni de bougies.")
+          "Phénix divin aux yeux de lumière, auréole et anneaux de feu, perché sur un lustre de cristal.")
 def lampadario_fenicione():
     g = Grid()
     pr = Mat("phoenix_red", (240, 70, 40), rough=0.4, emit=0.5, shades=2, amt=0.06)
@@ -1300,7 +1405,6 @@ def lampadario_fenicione():
     for dx, dy, h in ((0, 0, 10), (-2.6, 2, 7.5), (2.6, 2, 7.5), (0, 4.5, 6.5)):
         g.ell((C + dx, Y - 1 + dy, 64.5 + h * 0.45), (1.7, 1.7, h * 0.62), py, rot=(-22, 0, 0))
     g.tube([(C, Y - 8, 59), (C, Y - 11, 57.5), (C, Y - 11.5, 55.5)], [1.8, 1.2, 0.6], GOLD)
-    eye(g, C - 3, 60.5, r=2.4, iris=iris, pupil=0.42)
     for s in (-1, 1):
         for k in range(7):
             a = 8 + k * 10
@@ -1321,11 +1425,16 @@ def lampadario_fenicione():
     for _ in range(14):
         p = (C + rng.uniform(-34, 34), Y + rng.uniform(-8, 10), rng.uniform(40, 80))
         g.box(p, (p[0], p[1], p[2]), py if rng.random() < 0.6 else po)
+    glow_eyes(g, C - 3, 60.3, 2.2, 1.5, Mat("phoenix_eye", (255, 250, 200), rough=0.2, emit=4.0), tilt=0.4, ymax=Y - 5)
+    aura = Mat("phoenix_aura", (255, 190, 60), rough=0.3, emit=2.5)
+    g.torus((C, Y + 1, 46), 17, 0.6, aura, rot=(72, 0, 25))
+    g.torus((C, Y + 1, 46), 17, 0.6, aura, rot=(72, 0, -35))
+    halo(g, (C, Y - 1, 75), 4.5, 0.6, aura)
     return g
 
 
 @brainrot(29, "Clessidra Serpentona", "Divine", "$900K/s",
-          "Serpent émeraude couronné enroulé autour d'un sablier doré rempli de sable magique lumineux.")
+          "Serpent émeraude couronné enroulé autour d'un sablier de sable magique lumineux.")
 def clessidra_serpentona():
     g = Grid()
     sand = Mat("magic_sand", (255, 182, 52), rough=0.6, emit=1.6, shades=2, amt=0.06, scale=1)
@@ -1335,7 +1444,7 @@ def clessidra_serpentona():
     sn_d = Mat("serpent_green_d", (20, 120, 76), rough=0.35)
     belly = Mat("serpent_belly", (250, 216, 92), rough=0.35)
     gem = Mat("ruby", (255, 30, 84), rough=0.05, emit=2.0)
-    iris = Mat("snake_iris", (255, 212, 40), rough=0.2, emit=0.5)
+    iris = Mat("snake_iris", (255, 212, 40), rough=0.2, emit=2.0)
 
     g.cyl((C, Y, 0), 15.5, 4, GOLD)
     g.cyl((C, Y, 74), 15.5, 4, GOLD)
@@ -1380,6 +1489,8 @@ def clessidra_serpentona():
         p = (C + rng.uniform(-22, 22), Y + rng.uniform(-18, 10), rng.uniform(8, 80))
         if abs(p[0] - C) > 16 or p[1] < Y - 16:
             g.box(p, p, sand)
+    gold_chain(g, (C, Y - 15.6, 76.5), 3.8, 3.8, drop=1.2, r=0.75, medallion=GOLD, med_r=1.8,
+               emblem=lambda u, v: u * u + v * v <= 0.4, emblem_mat=EMERALD)
     return g
 
 
@@ -1387,7 +1498,7 @@ def clessidra_serpentona():
 # SECRET
 # ============================================================================
 @brainrot(30, "Glitchino Gattivisore", "Secret", "$2.5M/s",
-          "Chat noir géant à tête de vieille télé cathodique : écran qui grésille, visage pixel, corps qui buggue.")
+          "Chat-télé glitché : écran pixel, chaîne en or, couronne de pixels et corps qui buggue.")
 def glitchino_gattivisore():
     g = Grid()
     fur = Mat("cat_black", (42, 40, 56), rough=0.6, shades=2, amt=0.08)
@@ -1449,4 +1560,10 @@ def glitchino_gattivisore():
             continue
         s = rng.integers(0, 2)
         g.box(p, (p[0] + s, p[1] + s, p[2] + s), (mag, cya, yel)[rng.integers(0, 3)])
+    gold_chain(g, (C, Y + 6, 40.5), 8.5, 8.5, drop=3.5, r=1.0, medallion=GOLD, med_r=3.2,
+               emblem=lambda u, v: np.abs(u) + np.abs(v) <= 0.7, emblem_mat=cya)
+    for k in range(20):
+        a = 2 * math.pi * k / 20
+        p = (C + 11 * math.cos(a), Y + 3 + 11 * math.sin(a), 92 + (k % 3) * 0.6)
+        g.box(p, (p[0] + 1, p[1] + 1, p[2] + 1), (mag, cya, yel)[k % 3])
     return g
