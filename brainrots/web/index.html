@@ -1,0 +1,279 @@
+<title>Collection Brainrot</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lilita+One&family=Fredoka:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap">
+<style>
+/* Layout: a night-time showroom — rarity chips on top, a wall of collectible tiles, a 3D pedestal that opens over it. */
+:root {
+  --bg: #15122b;
+  --panel: #211c42;
+  --panel-2: #2b2552;
+  --line: #3c3570;
+  --fg: #f5f2ff;
+  --muted: #b2abd9;
+  --cash: #74ff7f;
+  --r-common: #b9c3cc;
+  --r-rare: #4fa6ff;
+  --r-epic: #bb72ff;
+  --r-legendary: #ffb52e;
+  --r-mythic: #ff5577;
+  --r-divine: #ffe68f;
+  --r-secret: #36f0ff;
+  --r-secret-2: #ff3fd0;
+  --display: "Lilita One", "Arial Rounded MT Bold", "Trebuchet MS", sans-serif;
+  --body: "Fredoka", "Nunito", "Segoe UI", system-ui, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  color-scheme: dark;
+}
+html, body { background: var(--bg); color: var(--fg); }
+body { font-family: var(--body); font-size: 15px; line-height: 1.5; }
+.wrap { max-width: 1180px; margin: 0 auto; padding-inline: 16px; padding-block: 28px 56px; display: grid; gap: 24px; }
+header { display: grid; gap: 10px; }
+h1 { font-family: var(--display); font-weight: 400; font-size: clamp(34px, 6vw, 58px); line-height: 1; margin: 0; letter-spacing: 0.5px; text-wrap: balance;
+  text-shadow: 0 3px 0 #0b0918, 0 0 24px rgba(187, 114, 255, 0.35); }
+.lede { margin: 0; color: var(--muted); max-width: 62ch; }
+.counts { display: flex; flex-wrap: wrap; gap: 8px 16px; font-family: var(--mono); font-size: 12.5px; color: var(--muted); }
+.counts b { color: var(--fg); font-weight: 500; }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip { font: 500 14px var(--body); color: var(--fg); background: var(--panel); border: 2px solid var(--line); border-radius: 999px; padding: 6px 14px; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; }
+.chip i { width: 10px; height: 10px; border-radius: 50%; background: var(--c, var(--fg)); display: inline-block; }
+.chip[aria-pressed="true"] { border-color: var(--c, var(--fg)); background: var(--panel-2); }
+.chip:focus-visible, .tile:focus-visible, .mut:focus-visible, .close:focus-visible { outline: 3px solid var(--r-divine); outline-offset: 2px; }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(168px, 1fr)); gap: 14px; }
+.tile { all: unset; cursor: pointer; display: grid; grid-template-rows: auto auto; background: var(--panel); border-radius: 18px; overflow: hidden; border: 2px solid var(--line); transition: transform .15s ease, border-color .15s ease; min-width: 0; }
+.tile:hover { transform: translateY(-3px); border-color: var(--c); }
+.tile .stage { aspect-ratio: 1 / 1; max-width: 100%; background: radial-gradient(circle at 50% 42%, color-mix(in srgb, var(--c) 55%, transparent), transparent 70%), var(--panel-2); display: grid; place-items: center; position: relative; }
+.tile .stage img { width: 88%; height: 88%; object-fit: contain; filter: drop-shadow(0 6px 8px rgba(0,0,0,.35)); }
+.tile .num { position: absolute; top: 8px; left: 10px; font-family: var(--mono); font-size: 12px; color: var(--muted); }
+.tile .meta { padding: 10px 12px 12px; display: grid; gap: 2px; }
+.tile .rar { font-family: var(--display); font-size: 13px; letter-spacing: 1px; text-transform: uppercase; color: var(--c); }
+.tile .name { font-weight: 600; font-size: 15px; line-height: 1.2; }
+.tile .inc { font-family: var(--display); font-size: 17px; color: var(--cash); text-shadow: 0 2px 0 #0b0918; }
+.secret-c { background: linear-gradient(90deg, var(--r-secret), var(--r-secret-2)); -webkit-background-clip: text; background-clip: text; color: transparent !important; }
+.note { color: var(--muted); font-size: 13px; max-width: 70ch; margin: 0; }
+.note code { font-family: var(--mono); font-size: 12px; color: var(--fg); }
+
+/* viewer */
+.overlay { position: fixed; inset: 0; z-index: 10; background: rgba(8, 6, 20, .78); display: grid; place-items: center; padding: max(12px, env(safe-area-inset-top, 0px)) 12px max(12px, env(safe-area-inset-bottom, 0px)); }
+.viewer { width: min(1040px, 100%); max-height: 100%; overflow: auto; background: var(--panel); border: 2px solid var(--c, var(--line)); border-radius: 22px; display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); }
+.canvas-box { position: relative; aspect-ratio: 1 / 1; max-width: 100%; background: radial-gradient(circle at 50% 45%, color-mix(in srgb, var(--c) 40%, transparent), transparent 72%), var(--panel-2); }
+.canvas-box canvas { width: 100%; height: 100%; display: block; touch-action: none; }
+.loading { position: absolute; inset: 0; display: grid; place-items: center; font-family: var(--mono); font-size: 13px; color: var(--muted); pointer-events: none; }
+.side { padding: 22px; display: grid; gap: 14px; align-content: start; min-width: 0; }
+.side .rar { font-family: var(--display); letter-spacing: 1px; text-transform: uppercase; color: var(--c); font-size: 18px; }
+.side h2 { font-family: var(--display); font-weight: 400; font-size: clamp(26px, 3.4vw, 36px); line-height: 1.05; margin: 0; text-wrap: balance; }
+.side .inc { font-family: var(--display); font-size: 26px; color: var(--cash); text-shadow: 0 2px 0 #0b0918; }
+.side p { margin: 0; color: var(--muted); }
+.stats { display: grid; grid-template-columns: auto 1fr; gap: 4px 14px; font-family: var(--mono); font-size: 12.5px; font-variant-numeric: tabular-nums; }
+.stats dt { color: var(--muted); }
+.stats dd { margin: 0; }
+.muts { display: flex; flex-wrap: wrap; gap: 6px; }
+.mut { font: 500 13px var(--body); color: var(--fg); background: var(--panel-2); border: 2px solid var(--line); border-radius: 10px; padding: 5px 10px; cursor: pointer; }
+.mut[aria-pressed="true"] { border-color: var(--fg); }
+.label { font-family: var(--display); font-size: 13px; letter-spacing: 1px; text-transform: uppercase; color: var(--muted); }
+.close-btn { position: absolute; top: 10px; right: 10px; z-index: 2; font: 600 14px var(--body); color: var(--fg); background: rgba(8,6,20,.6); border: 2px solid var(--line); border-radius: 999px; padding: 6px 12px; cursor: pointer; }
+.hint { position: absolute; bottom: 10px; left: 12px; font-family: var(--mono); font-size: 11px; color: var(--muted); pointer-events: none; }
+@media (max-width: 760px) { .viewer { grid-template-columns: 1fr; } }
+@media (prefers-reduced-motion: reduce) { .tile { transition: none; } .tile:hover { transform: none; } }
+</style>
+
+<div class="wrap">
+  <header>
+    <h1>Collection Brainrot</h1>
+    <p class="lede">Les 30 brainrots originaux en voxel pour ta map UEFN. Touche une carte pour la voir en 3D, la faire tourner et essayer les mutations.</p>
+    <div class="counts" id="counts"></div>
+  </header>
+  <div class="chips" id="chips" role="toolbar" aria-label="Filtrer par rareté"></div>
+  <main class="grid" id="grid"></main>
+  <p class="note">Fichiers dans le repo : <code>brainrots/models/NN_nom/</code> (<code>.fbx</code> pour UEFN, <code>.glb</code>, <code>.vox</code> pour MagicaVoxel) et palettes dans <code>brainrots/textures/</code>. Le guide d'import est dans <code>brainrots/README.md</code>.</p>
+</div>
+
+<div class="overlay" id="overlay" hidden>
+  <div class="viewer" id="viewer" role="dialog" aria-modal="true" aria-labelledby="v-name">
+    <div class="canvas-box">
+      <canvas id="cv" aria-label="Modèle 3D, glisse pour tourner"></canvas>
+      <div class="loading" id="loading">Chargement…</div>
+      <button class="close-btn" id="close" type="button">Fermer</button>
+      <div class="hint">glisser pour tourner · pincer pour zoomer</div>
+    </div>
+    <div class="side">
+      <div class="rar" id="v-rar"></div>
+      <h2 id="v-name"></h2>
+      <div class="inc" id="v-inc"></div>
+      <p id="v-concept"></p>
+      <div>
+        <div class="label">Mutation</div>
+        <div class="muts" id="muts"></div>
+      </div>
+      <dl class="stats" id="v-stats"></dl>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/three@0.147.0/build/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.147.0/examples/js/loaders/GLTFLoader.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.147.0/examples/js/controls/OrbitControls.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.147.0/examples/js/environments/RoomEnvironment.js"></script>
+<script>
+const DATA = [{"num": 1, "name": "Lampadino Pinguino", "slug": "lampadino_pinguino", "rarity": "Common", "income": "$5/s", "concept": "Pingouin-génie dont la tête est une ampoule allumée ; lunettes rondes et nœud papillon.", "triangles": 14486, "voxels": 59622, "size_m": [2.88, 2.64, 5.04], "folder": "models/01_lampadino_pinguino"}, {"num": 2, "name": "Gommarello Ranocchio", "slug": "gommarello_ranocchio", "rarity": "Common", "income": "$8/s", "concept": "Grenouille-gomme bicolore, casquette à l'envers et dent en or.", "triangles": 5052, "voxels": 36910, "size_m": [3.18, 2.88, 2.34], "folder": "models/02_gommarello_ranocchio"}, {"num": 3, "name": "Spugnetta Lumachina", "slug": "spugnetta_lumachina", "rarity": "Common", "income": "$12/s", "concept": "Escargot amoureux (yeux en cœur) dont la coquille est une éponge qui fait des bulles.", "triangles": 11518, "voxels": 36004, "size_m": [2.88, 3.66, 3.84], "folder": "models/03_spugnetta_lumachina"}, {"num": 4, "name": "Pomodorino Granchietto", "slug": "pomodorino_granchietto", "rarity": "Common", "income": "$18/s", "concept": "Crabe-tomate chef cuisinier : toque, moustache et sourcils froncés.", "triangles": 12374, "voxels": 32080, "size_m": [4.32, 2.82, 3.18], "folder": "models/04_pomodorino_granchietto"}, {"num": 5, "name": "Ombrellino Pipistrello", "slug": "ombrellino_pipistrello", "rarity": "Common", "income": "$25/s", "concept": "Chauve-souris vampire en haut-de-forme, yeux rouges lumineux ; ses ailes sont un parapluie.", "triangles": 9104, "voxels": 20597, "size_m": [5.34, 2.4, 3.78], "folder": "models/05_ombrellino_pipistrello"}, {"num": 6, "name": "Candelino Gufetto", "slug": "candelino_gufetto", "rarity": "Common", "income": "$35/s", "concept": "Bébé hibou en cire de bougie qui s'endort sur son bougeoir doré.", "triangles": 6802, "voxels": 33839, "size_m": [3.0, 2.46, 4.14], "folder": "models/06_candelino_gufetto"}, {"num": 7, "name": "Ventilatore Pavone", "slug": "ventilatore_pavone", "rarity": "Rare", "income": "$60/s", "concept": "Paon diva : roue-ventilateur, lunettes œil de chat et collier en or.", "triangles": 12856, "voxels": 25956, "size_m": [3.78, 3.48, 4.68], "folder": "models/07_ventilatore_pavone"}, {"num": 8, "name": "Lavatricino Polpetto", "slug": "lavatricino_polpetto", "rarity": "Rare", "income": "$90/s", "concept": "Pieuvre en bonnet de douche qui sort du hublot d'une machine à laver.", "triangles": 10638, "voxels": 88847, "size_m": [3.66, 3.96, 3.78], "folder": "models/08_lavatricino_polpetto"}, {"num": 9, "name": "Microondino Riccio", "slug": "microondino_riccio", "rarity": "Rare", "income": "$140/s", "concept": "Hérisson-micro-ondes debout en baskets, piquants brûlants comme des braises.", "triangles": 13990, "voxels": 64021, "size_m": [3.3, 3.36, 4.68], "folder": "models/09_microondino_riccio"}, {"num": 10, "name": "Sveglia Coniglietta", "slug": "sveglia_coniglietta", "rarity": "Rare", "income": "$200/s", "concept": "Lapine-réveil en baskets roses et lunettes étoiles.", "triangles": 7882, "voxels": 36142, "size_m": [3.06, 2.04, 5.4], "folder": "models/10_sveglia_coniglietta"}, {"num": 11, "name": "Pennellone Volpino", "slug": "pennellone_volpino", "rarity": "Rare", "income": "$300/s", "concept": "Renard artiste : béret, écharpe rayée et queue-pinceau trempée dans la peinture.", "triangles": 14546, "voxels": 38198, "size_m": [3.12, 4.14, 4.26], "folder": "models/11_pennellone_volpino"}, {"num": 12, "name": "Innaffiatoio Elefantino", "slug": "innaffiatoio_elefantino", "rarity": "Rare", "income": "$450/s", "concept": "Bébé éléphant-arrosoir en chapeau de paille ; sa trompe est le bec verseur.", "triangles": 10788, "voxels": 39298, "size_m": [2.94, 5.16, 3.18], "folder": "models/12_innaffiatoio_elefantino"}, {"num": 13, "name": "Telefonino Fenicottero", "slug": "telefonino_fenicottero", "rarity": "Epic", "income": "$1.2K/s", "concept": "Flamant rose diva : corps en téléphone à cadran, cou en fil spiralé, lunettes cœur et perles.", "triangles": 8356, "voxels": 32799, "size_m": [3.06, 2.58, 6.12], "folder": "models/13_telefonino_fenicottero"}, {"num": 14, "name": "Jukeboxino Pappagallo", "slug": "jukeboxino_pappagallo", "rarity": "Epic", "income": "$1.8K/s", "concept": "Perroquet rockstar sorti d'un juke-box néon : aviateurs dorés et chaîne à note de musique.", "triangles": 12274, "voxels": 99855, "size_m": [4.56, 3.12, 6.0], "folder": "models/14_jukeboxino_pappagallo"}, {"num": 15, "name": "Aspirapolvere Formichiere", "slug": "aspirapolvere_formichiere", "rarity": "Epic", "income": "$2.5K/s", "concept": "Fourmilier-aspirateur tuné : lunettes de course, aileron et pots d'échappement enflammés.", "triangles": 13034, "voxels": 63750, "size_m": [3.18, 8.34, 3.0], "folder": "models/15_aspirapolvere_formichiere"}, {"num": 16, "name": "Cassettino Camaleonte", "slug": "cassettino_camaleonte", "rarity": "Epic", "income": "$3.6K/s", "concept": "Caméléon-cassette rétro avec bandeau années 80 ; sa queue est la bande magnétique.", "triangles": 8808, "voxels": 30049, "size_m": [5.58, 1.32, 4.32], "folder": "models/16_cassettino_camaleonte"}, {"num": 17, "name": "Frullatore Medusina", "slug": "frullatore_medusina", "rarity": "Epic", "income": "$5K/s", "concept": "Méduse fêtarde (chapeau pointu, yeux étoiles) posée sur un mixeur rempli de smoothie.", "triangles": 14246, "voxels": 75908, "size_m": [3.24, 2.88, 5.7], "folder": "models/17_frullatore_medusina"}, {"num": 18, "name": "Semaforino Giraffino", "slug": "semaforino_giraffino", "rarity": "Epic", "income": "$7.5K/s", "concept": "Girafe policière dont le cou est un feu tricolore ; casquette et sifflet.", "triangles": 8822, "voxels": 43560, "size_m": [1.74, 3.78, 7.26], "folder": "models/18_semaforino_giraffino"}, {"num": 19, "name": "Mongolfiera Balenotta", "slug": "mongolfiera_balenotta", "rarity": "Legendary", "income": "$12K/s", "concept": "Baleine-montgolfière pilote : lunettes d'aviateur, nacelle en osier et nuages.", "triangles": 29336, "voxels": 165690, "size_m": [4.68, 6.3, 7.62], "folder": "models/19_mongolfiera_balenotta"}, {"num": 20, "name": "Escavatore Mammuttone", "slug": "escavatore_mammuttone", "rarity": "Legendary", "income": "$18K/s", "concept": "Mammouth chef de chantier sur chenilles : casque orange, trompe en bras de pelleteuse.", "triangles": 25484, "voxels": 124865, "size_m": [3.48, 6.24, 5.16], "folder": "models/20_escavatore_mammuttone"}, {"num": 21, "name": "Faro Pellicano", "slug": "faro_pellicano", "rarity": "Legendary", "income": "$26K/s", "concept": "Pélican capitaine sur son phare rayé, lanterne allumée, poisson dans le bec.", "triangles": 22532, "voxels": 129191, "size_m": [4.92, 4.98, 7.92], "folder": "models/21_faro_pellicano"}, {"num": 22, "name": "Discopalla Armadillo", "slug": "discopalla_armadillo", "rarity": "Legendary", "income": "$40K/s", "concept": "Tatou boule disco : lunettes de star, chaîne en or et micro sur pied.", "triangles": 30580, "voxels": 186809, "size_m": [5.64, 5.94, 6.66], "folder": "models/22_discopalla_armadillo"}, {"num": 23, "name": "Arpa Cignetta", "slug": "arpa_cignetta", "rarity": "Legendary", "income": "$60K/s", "concept": "Cygne couronné dont le cou forme une harpe dorée aux cordes arc-en-ciel lumineuses.", "triangles": 19392, "voxels": 69765, "size_m": [4.74, 4.98, 6.78], "folder": "models/23_arpa_cignetta"}, {"num": 24, "name": "Vulcanetto Triceratopo", "slug": "vulcanetto_triceratopo", "rarity": "Mythic", "income": "$95K/s", "concept": "Tricératops volcanique : yeux de lave, piques d'obsidienne et éruption sur le dos.", "triangles": 39412, "voxels": 181503, "size_m": [3.84, 7.86, 7.56], "folder": "models/24_vulcanetto_triceratopo"}, {"num": 25, "name": "Disco Volante Axolotto", "slug": "disco_volante_axolotto", "rarity": "Mythic", "income": "$140K/s", "concept": "Axolotl extraterrestre à visière cyber et antennes, aux commandes d'une soucoupe volante.", "triangles": 33420, "voxels": 145052, "size_m": [6.48, 5.34, 6.0], "folder": "models/25_disco_volante_axolotto"}, {"num": 26, "name": "Ghiacciolone Orso Polare", "slug": "ghiacciolone_orso_polare", "rarity": "Mythic", "income": "$200K/s", "concept": "Ours polaire esquimau, lunettes de glace et écharpe, croqué sur un coin.", "triangles": 10356, "voxels": 102467, "size_m": [5.28, 2.88, 7.44], "folder": "models/26_ghiacciolone_orso_polare"}, {"num": 27, "name": "Razzo Gallinaccio", "slug": "razzo_gallinaccio", "rarity": "Mythic", "income": "$300K/s", "concept": "Poule-fusée au décollage : regard déterminé, écharpe de pilote, poussin au hublot.", "triangles": 29026, "voxels": 142810, "size_m": [3.96, 3.96, 8.28], "folder": "models/27_razzo_gallinaccio"}, {"num": 28, "name": "Lampadario Fenicione", "slug": "lampadario_fenicione", "rarity": "Divine", "income": "$650K/s", "concept": "Phénix divin aux yeux de lumière, auréole et anneaux de feu, perché sur un lustre de cristal.", "triangles": 43118, "voxels": 78697, "size_m": [7.26, 5.04, 9.06], "folder": "models/28_lampadario_fenicione"}, {"num": 29, "name": "Clessidra Serpentona", "slug": "clessidra_serpentona", "rarity": "Divine", "income": "$900K/s", "concept": "Serpent émeraude couronné enroulé autour d'un sablier de sable magique lumineux.", "triangles": 50022, "voxels": 236265, "size_m": [4.92, 5.52, 10.32], "folder": "models/29_clessidra_serpentona"}, {"num": 30, "name": "Glitchino Gattivisore", "slug": "glitchino_gattivisore", "rarity": "Secret", "income": "$2.5M/s", "concept": "Chat-télé glitché : écran pixel, chaîne en or, couronne de pixels et corps qui buggue.", "triangles": 42886, "voxels": 427038, "size_m": [6.24, 5.52, 11.4], "folder": "models/30_glitchino_gattivisore"}];
+const RAR = ["Common", "Rare", "Epic", "Legendary", "Mythic", "Divine", "Secret"];
+const RAR_FR = { Common: "Commun", Rare: "Rare", Epic: "Épique", Legendary: "Légendaire", Mythic: "Mythique", Divine: "Divin", Secret: "Secret" };
+const MUTS = ["Normal", "Gold", "Diamond", "Void", "Lava", "Neon", "Candy", "BlackWhite"];
+const cvar = r => `var(--r-${r.toLowerCase()})`;
+
+const grid = document.getElementById("grid");
+const chips = document.getElementById("chips");
+let filter = "All";
+
+function counts() {
+  const el = document.getElementById("counts");
+  el.innerHTML = RAR.map(r => `<span>${RAR_FR[r]} <b>${DATA.filter(d => d.rarity === r).length}</b></span>`).join("");
+}
+function renderChips() {
+  const all = ["All", ...RAR];
+  chips.innerHTML = all.map(r => `<button class="chip" type="button" data-r="${r}" aria-pressed="${r === filter}" style="--c:${r === "All" ? "var(--fg)" : cvar(r)}"><i></i>${r === "All" ? "Tous" : RAR_FR[r]}</button>`).join("");
+}
+function renderGrid() {
+  grid.innerHTML = DATA.filter(d => filter === "All" || d.rarity === filter).map(d => `
+    <button class="tile" type="button" data-n="${d.num}" style="--c:${cvar(d.rarity)}">
+      <div class="stage"><span class="num">#${String(d.num).padStart(2, "0")}</span><img src="thumbs/${d.slug}.webp" alt="${d.name}" loading="lazy" width="360" height="360"></div>
+      <div class="meta"><span class="rar ${d.rarity === "Secret" ? "secret-c" : ""}">${RAR_FR[d.rarity]}</span><span class="name">${d.name}</span><span class="inc">${d.income}</span></div>
+    </button>`).join("");
+}
+chips.addEventListener("click", e => {
+  const b = e.target.closest(".chip"); if (!b) return;
+  filter = b.dataset.r;
+  try { localStorage.setItem("br-filter", filter); } catch (_) {}
+  renderChips(); renderGrid();
+});
+grid.addEventListener("click", e => {
+  const t = e.target.closest(".tile"); if (!t) return;
+  openViewer(DATA.find(d => d.num === +t.dataset.n), t);
+});
+try { const f = localStorage.getItem("br-filter"); if (f && (f === "All" || RAR.includes(f))) filter = f; } catch (_) {}
+counts(); renderChips(); renderGrid();
+
+/* ---------- 3D viewer ---------- */
+const overlay = document.getElementById("overlay");
+const viewer = document.getElementById("viewer");
+const loadingEl = document.getElementById("loading");
+const mutsEl = document.getElementById("muts");
+let three = null, current = null, mesh = null, mutation = "Normal", lastFocus = null;
+const texCache = {};
+
+function initThree() {
+  const canvas = document.getElementById("cv");
+  const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+  renderer.setPixelRatio(Math.min(2, window.devicePixelRatio || 1));
+  renderer.outputEncoding = THREE.sRGBEncoding;
+  renderer.shadowMap.enabled = true;
+  renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+  const scene = new THREE.Scene();
+  const pmrem = new THREE.PMREMGenerator(renderer);
+  scene.environment = pmrem.fromScene(new THREE.RoomEnvironment(), 0.04).texture;
+  const camera = new THREE.PerspectiveCamera(32, 1, 0.05, 200);
+  scene.add(new THREE.HemisphereLight(0xffffff, 0x3a2f66, 0.55));
+  const key = new THREE.DirectionalLight(0xfff4e8, 1.6);
+  key.position.set(-4, 9, 6); key.castShadow = true; key.shadow.mapSize.set(1024, 1024);
+  key.shadow.camera.left = key.shadow.camera.bottom = -8; key.shadow.camera.right = key.shadow.camera.top = 8;
+  scene.add(key);
+  const rim = new THREE.DirectionalLight(0xbcd2ff, 0.8); rim.position.set(5, 6, -8); scene.add(rim);
+  const ground = new THREE.Mesh(new THREE.PlaneGeometry(40, 40), new THREE.ShadowMaterial({ opacity: 0.28 }));
+  ground.rotation.x = -Math.PI / 2; ground.receiveShadow = true; scene.add(ground);
+  const controls = new THREE.OrbitControls(camera, canvas);
+  controls.enableDamping = true; controls.autoRotate = !matchMedia("(prefers-reduced-motion: reduce)").matches; controls.autoRotateSpeed = 1.6;
+  controls.enablePan = false;
+  const loader = new THREE.GLTFLoader();
+  function resize() {
+    const r = canvas.parentElement.getBoundingClientRect();
+    renderer.setSize(r.width, r.height, false); camera.aspect = r.width / r.height; camera.updateProjectionMatrix();
+  }
+  new ResizeObserver(resize).observe(canvas.parentElement);
+  (function loop() { requestAnimationFrame(loop); if (!overlay.hidden) { controls.update(); renderer.render(scene, camera); } })();
+  three = { renderer, scene, camera, controls, loader, resize };
+}
+
+function loadTex(url, srgb) {
+  if (texCache[url]) return texCache[url];
+  const t = new THREE.TextureLoader().load(url);
+  t.flipY = false; t.magFilter = t.minFilter = THREE.NearestFilter; t.generateMipmaps = false;
+  t.encoding = srgb ? THREE.sRGBEncoding : THREE.LinearEncoding;
+  return (texCache[url] = t);
+}
+function applyMutation(name) {
+  mutation = name;
+  [...mutsEl.children].forEach(b => b.setAttribute("aria-pressed", b.dataset.m === name));
+  if (!mesh) return;
+  const suf = name === "Normal" ? "" : "_" + name;
+  const dir = name === "Normal" ? "tex/" : "tex/mutations/";
+  const base = loadTex(`${dir}T_Brainrot_BaseColor${suf}.png`, true);
+  const orm = loadTex(`${dir}T_Brainrot_ORM${suf}.png`, false);
+  const emi = loadTex(`${dir}T_Brainrot_Emissive${suf}.png`, true);
+  mesh.traverse(o => {
+    if (!o.isMesh) return;
+    const m = o.material;
+    m.map = base; m.roughnessMap = orm; m.metalnessMap = orm; m.emissiveMap = emi;
+    m.metalness = 1; m.roughness = 1; m.emissive.set(0xffffff); m.emissiveIntensity = 2.2;
+    m.needsUpdate = true;
+  });
+}
+mutsEl.innerHTML = MUTS.map(m => `<button class="mut" type="button" data-m="${m}" aria-pressed="${m === "Normal"}">${m === "BlackWhite" ? "Black&White" : m}</button>`).join("");
+mutsEl.addEventListener("click", e => { const b = e.target.closest(".mut"); if (b) applyMutation(b.dataset.m); });
+
+function fit(obj) {
+  const box = new THREE.Box3().setFromObject(obj);
+  const size = box.getSize(new THREE.Vector3()); const center = box.getCenter(new THREE.Vector3());
+  const radius = size.length() / 2;
+  const { camera, controls } = three;
+  const dist = radius / Math.sin(THREE.MathUtils.degToRad(camera.fov / 2)) * 1.05;
+  const dir = new THREE.Vector3(0.55, 0.38, 1).normalize();
+  camera.position.copy(center).addScaledVector(dir, dist);
+  controls.target.copy(center); controls.minDistance = radius * 0.8; controls.maxDistance = dist * 2.5; controls.update();
+}
+
+function openViewer(d, from) {
+  lastFocus = from;
+  current = d;
+  viewer.style.setProperty("--c", cvar(d.rarity));
+  const rarEl = document.getElementById("v-rar");
+  rarEl.textContent = RAR_FR[d.rarity]; rarEl.className = "rar" + (d.rarity === "Secret" ? " secret-c" : "");
+  document.getElementById("v-name").textContent = d.name;
+  document.getElementById("v-inc").textContent = d.income;
+  document.getElementById("v-concept").textContent = d.concept;
+  document.getElementById("v-stats").innerHTML = `
+    <dt>Taille</dt><dd>${d.size_m[0]} × ${d.size_m[1]} × ${d.size_m[2]} m</dd>
+    <dt>Triangles</dt><dd>${d.triangles.toLocaleString("fr-FR")}</dd>
+    <dt>Voxels</dt><dd>${d.voxels.toLocaleString("fr-FR")}</dd>
+    <dt>Dossier</dt><dd>${d.folder}/</dd>`;
+  overlay.hidden = false;
+  document.getElementById("close").focus();
+  if (typeof THREE === "undefined") { loadingEl.textContent = "La 3D n'a pas pu se charger. Les images restent visibles dans la grille."; return; }
+  if (!three) initThree();
+  three.resize();
+  loadingEl.hidden = false; loadingEl.textContent = "Chargement…";
+  if (mesh) { three.scene.remove(mesh); mesh = null; }
+  const want = d.num;
+  three.loader.load(`glb/${d.slug}.glb`, g => {
+    if (!current || current.num !== want) return;
+    mesh = g.scene;
+    mesh.traverse(o => { if (o.isMesh) { o.castShadow = true; } });
+    three.scene.add(mesh);
+    fit(mesh);
+    applyMutation(mutation);
+    loadingEl.hidden = true;
+  }, undefined, () => { loadingEl.textContent = "Le modèle n'a pas pu se charger."; });
+}
+function closeViewer() { overlay.hidden = true; current = null; if (lastFocus) lastFocus.focus(); }
+document.getElementById("close").addEventListener("click", closeViewer);
+overlay.addEventListener("click", e => { if (e.target === overlay) closeViewer(); });
+document.addEventListener("keydown", e => {
+  if (overlay.hidden) return;
+  if (e.key === "Escape") closeViewer();
+  if (e.key === "ArrowRight" || e.key === "ArrowLeft") {
+    const list = DATA.filter(d => filter === "All" || d.rarity === filter);
+    const i = list.findIndex(d => d.num === current.num);
+    const n = list[(i + (e.key === "ArrowRight" ? 1 : -1) + list.length) % list.length];
+    openViewer(n, lastFocus);
+  }
+});
+</script>
