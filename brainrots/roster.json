@@ -1,0 +1,482 @@
+[
+ {
+  "num": 1,
+  "name": "Lampadino Pinguino",
+  "slug": "lampadino_pinguino",
+  "rarity": "Common",
+  "income": "$5/s",
+  "concept": "Pingouin-génie dont la tête est une ampoule allumée ; lunettes rondes et nœud papillon.",
+  "triangles": 14486,
+  "voxels": 59622,
+  "size_m": [
+   2.88,
+   2.64,
+   5.04
+  ],
+  "folder": "models/01_lampadino_pinguino"
+ },
+ {
+  "num": 2,
+  "name": "Gommarello Ranocchio",
+  "slug": "gommarello_ranocchio",
+  "rarity": "Common",
+  "income": "$8/s",
+  "concept": "Grenouille-gomme bicolore, casquette à l'envers et dent en or.",
+  "triangles": 5052,
+  "voxels": 36910,
+  "size_m": [
+   3.18,
+   2.88,
+   2.34
+  ],
+  "folder": "models/02_gommarello_ranocchio"
+ },
+ {
+  "num": 3,
+  "name": "Spugnetta Lumachina",
+  "slug": "spugnetta_lumachina",
+  "rarity": "Common",
+  "income": "$12/s",
+  "concept": "Escargot amoureux (yeux en cœur) dont la coquille est une éponge qui fait des bulles.",
+  "triangles": 11518,
+  "voxels": 36004,
+  "size_m": [
+   2.88,
+   3.66,
+   3.84
+  ],
+  "folder": "models/03_spugnetta_lumachina"
+ },
+ {
+  "num": 4,
+  "name": "Pomodorino Granchietto",
+  "slug": "pomodorino_granchietto",
+  "rarity": "Common",
+  "income": "$18/s",
+  "concept": "Crabe-tomate chef cuisinier : toque, moustache et sourcils froncés.",
+  "triangles": 12374,
+  "voxels": 32080,
+  "size_m": [
+   4.32,
+   2.82,
+   3.18
+  ],
+  "folder": "models/04_pomodorino_granchietto"
+ },
+ {
+  "num": 5,
+  "name": "Ombrellino Pipistrello",
+  "slug": "ombrellino_pipistrello",
+  "rarity": "Common",
+  "income": "$25/s",
+  "concept": "Chauve-souris vampire en haut-de-forme, yeux rouges lumineux ; ses ailes sont un parapluie.",
+  "triangles": 9104,
+  "voxels": 20597,
+  "size_m": [
+   5.34,
+   2.4,
+   3.78
+  ],
+  "folder": "models/05_ombrellino_pipistrello"
+ },
+ {
+  "num": 6,
+  "name": "Candelino Gufetto",
+  "slug": "candelino_gufetto",
+  "rarity": "Common",
+  "income": "$35/s",
+  "concept": "Bébé hibou en cire de bougie qui s'endort sur son bougeoir doré.",
+  "triangles": 6802,
+  "voxels": 33839,
+  "size_m": [
+   3.0,
+   2.46,
+   4.14
+  ],
+  "folder": "models/06_candelino_gufetto"
+ },
+ {
+  "num": 7,
+  "name": "Ventilatore Pavone",
+  "slug": "ventilatore_pavone",
+  "rarity": "Rare",
+  "income": "$60/s",
+  "concept": "Paon diva : roue-ventilateur, lunettes œil de chat et collier en or.",
+  "triangles": 12856,
+  "voxels": 25956,
+  "size_m": [
+   3.78,
+   3.48,
+   4.68
+  ],
+  "folder": "models/07_ventilatore_pavone"
+ },
+ {
+  "num": 8,
+  "name": "Lavatricino Polpetto",
+  "slug": "lavatricino_polpetto",
+  "rarity": "Rare",
+  "income": "$90/s",
+  "concept": "Pieuvre en bonnet de douche qui sort du hublot d'une machine à laver.",
+  "triangles": 10638,
+  "voxels": 88847,
+  "size_m": [
+   3.66,
+   3.96,
+   3.78
+  ],
+  "folder": "models/08_lavatricino_polpetto"
+ },
+ {
+  "num": 9,
+  "name": "Microondino Riccio",
+  "slug": "microondino_riccio",
+  "rarity": "Rare",
+  "income": "$140/s",
+  "concept": "Hérisson-micro-ondes debout en baskets, piquants brûlants comme des braises.",
+  "triangles": 13990,
+  "voxels": 64021,
+  "size_m": [
+   3.3,
+   3.36,
+   4.68
+  ],
+  "folder": "models/09_microondino_riccio"
+ },
+ {
+  "num": 10,
+  "name": "Sveglia Coniglietta",
+  "slug": "sveglia_coniglietta",
+  "rarity": "Rare",
+  "income": "$200/s",
+  "concept": "Lapine-réveil en baskets roses et lunettes étoiles.",
+  "triangles": 7882,
+  "voxels": 36142,
+  "size_m": [
+   3.06,
+   2.04,
+   5.4
+  ],
+  "folder": "models/10_sveglia_coniglietta"
+ },
+ {
+  "num": 11,
+  "name": "Pennellone Volpino",
+  "slug": "pennellone_volpino",
+  "rarity": "Rare",
+  "income": "$300/s",
+  "concept": "Renard artiste : béret, écharpe rayée et queue-pinceau trempée dans la peinture.",
+  "triangles": 14546,
+  "voxels": 38198,
+  "size_m": [
+   3.12,
+   4.14,
+   4.26
+  ],
+  "folder": "models/11_pennellone_volpino"
+ },
+ {
+  "num": 12,
+  "name": "Innaffiatoio Elefantino",
+  "slug": "innaffiatoio_elefantino",
+  "rarity": "Rare",
+  "income": "$450/s",
+  "concept": "Bébé éléphant-arrosoir en chapeau de paille ; sa trompe est le bec verseur.",
+  "triangles": 10788,
+  "voxels": 39298,
+  "size_m": [
+   2.94,
+   5.16,
+   3.18
+  ],
+  "folder": "models/12_innaffiatoio_elefantino"
+ },
+ {
+  "num": 13,
+  "name": "Telefonino Fenicottero",
+  "slug": "telefonino_fenicottero",
+  "rarity": "Epic",
+  "income": "$1.2K/s",
+  "concept": "Flamant rose diva : corps en téléphone à cadran, cou en fil spiralé, lunettes cœur et perles.",
+  "triangles": 8356,
+  "voxels": 32799,
+  "size_m": [
+   3.06,
+   2.58,
+   6.12
+  ],
+  "folder": "models/13_telefonino_fenicottero"
+ },
+ {
+  "num": 14,
+  "name": "Jukeboxino Pappagallo",
+  "slug": "jukeboxino_pappagallo",
+  "rarity": "Epic",
+  "income": "$1.8K/s",
+  "concept": "Perroquet rockstar sorti d'un juke-box néon : aviateurs dorés et chaîne à note de musique.",
+  "triangles": 12274,
+  "voxels": 99855,
+  "size_m": [
+   4.56,
+   3.12,
+   6.0
+  ],
+  "folder": "models/14_jukeboxino_pappagallo"
+ },
+ {
+  "num": 15,
+  "name": "Aspirapolvere Formichiere",
+  "slug": "aspirapolvere_formichiere",
+  "rarity": "Epic",
+  "income": "$2.5K/s",
+  "concept": "Fourmilier-aspirateur tuné : lunettes de course, aileron et pots d'échappement enflammés.",
+  "triangles": 13034,
+  "voxels": 63750,
+  "size_m": [
+   3.18,
+   8.34,
+   3.0
+  ],
+  "folder": "models/15_aspirapolvere_formichiere"
+ },
+ {
+  "num": 16,
+  "name": "Cassettino Camaleonte",
+  "slug": "cassettino_camaleonte",
+  "rarity": "Epic",
+  "income": "$3.6K/s",
+  "concept": "Caméléon-cassette rétro avec bandeau années 80 ; sa queue est la bande magnétique.",
+  "triangles": 8808,
+  "voxels": 30049,
+  "size_m": [
+   5.58,
+   1.32,
+   4.32
+  ],
+  "folder": "models/16_cassettino_camaleonte"
+ },
+ {
+  "num": 17,
+  "name": "Frullatore Medusina",
+  "slug": "frullatore_medusina",
+  "rarity": "Epic",
+  "income": "$5K/s",
+  "concept": "Méduse fêtarde (chapeau pointu, yeux étoiles) posée sur un mixeur rempli de smoothie.",
+  "triangles": 14246,
+  "voxels": 75908,
+  "size_m": [
+   3.24,
+   2.88,
+   5.7
+  ],
+  "folder": "models/17_frullatore_medusina"
+ },
+ {
+  "num": 18,
+  "name": "Semaforino Giraffino",
+  "slug": "semaforino_giraffino",
+  "rarity": "Epic",
+  "income": "$7.5K/s",
+  "concept": "Girafe policière dont le cou est un feu tricolore ; casquette et sifflet.",
+  "triangles": 8822,
+  "voxels": 43560,
+  "size_m": [
+   1.74,
+   3.78,
+   7.26
+  ],
+  "folder": "models/18_semaforino_giraffino"
+ },
+ {
+  "num": 19,
+  "name": "Mongolfiera Balenotta",
+  "slug": "mongolfiera_balenotta",
+  "rarity": "Legendary",
+  "income": "$12K/s",
+  "concept": "Baleine-montgolfière pilote : lunettes d'aviateur, nacelle en osier et nuages.",
+  "triangles": 29336,
+  "voxels": 165690,
+  "size_m": [
+   4.68,
+   6.3,
+   7.62
+  ],
+  "folder": "models/19_mongolfiera_balenotta"
+ },
+ {
+  "num": 20,
+  "name": "Escavatore Mammuttone",
+  "slug": "escavatore_mammuttone",
+  "rarity": "Legendary",
+  "income": "$18K/s",
+  "concept": "Mammouth chef de chantier sur chenilles : casque orange, trompe en bras de pelleteuse.",
+  "triangles": 25484,
+  "voxels": 124865,
+  "size_m": [
+   3.48,
+   6.24,
+   5.16
+  ],
+  "folder": "models/20_escavatore_mammuttone"
+ },
+ {
+  "num": 21,
+  "name": "Faro Pellicano",
+  "slug": "faro_pellicano",
+  "rarity": "Legendary",
+  "income": "$26K/s",
+  "concept": "Pélican capitaine sur son phare rayé, lanterne allumée, poisson dans le bec.",
+  "triangles": 22532,
+  "voxels": 129191,
+  "size_m": [
+   4.92,
+   4.98,
+   7.92
+  ],
+  "folder": "models/21_faro_pellicano"
+ },
+ {
+  "num": 22,
+  "name": "Discopalla Armadillo",
+  "slug": "discopalla_armadillo",
+  "rarity": "Legendary",
+  "income": "$40K/s",
+  "concept": "Tatou boule disco : lunettes de star, chaîne en or et micro sur pied.",
+  "triangles": 30580,
+  "voxels": 186809,
+  "size_m": [
+   5.64,
+   5.94,
+   6.66
+  ],
+  "folder": "models/22_discopalla_armadillo"
+ },
+ {
+  "num": 23,
+  "name": "Arpa Cignetta",
+  "slug": "arpa_cignetta",
+  "rarity": "Legendary",
+  "income": "$60K/s",
+  "concept": "Cygne couronné dont le cou forme une harpe dorée aux cordes arc-en-ciel lumineuses.",
+  "triangles": 19392,
+  "voxels": 69765,
+  "size_m": [
+   4.74,
+   4.98,
+   6.78
+  ],
+  "folder": "models/23_arpa_cignetta"
+ },
+ {
+  "num": 24,
+  "name": "Vulcanetto Triceratopo",
+  "slug": "vulcanetto_triceratopo",
+  "rarity": "Mythic",
+  "income": "$95K/s",
+  "concept": "Tricératops volcanique : yeux de lave, piques d'obsidienne et éruption sur le dos.",
+  "triangles": 39412,
+  "voxels": 181503,
+  "size_m": [
+   3.84,
+   7.86,
+   7.56
+  ],
+  "folder": "models/24_vulcanetto_triceratopo"
+ },
+ {
+  "num": 25,
+  "name": "Disco Volante Axolotto",
+  "slug": "disco_volante_axolotto",
+  "rarity": "Mythic",
+  "income": "$140K/s",
+  "concept": "Axolotl extraterrestre à visière cyber et antennes, aux commandes d'une soucoupe volante.",
+  "triangles": 33420,
+  "voxels": 145052,
+  "size_m": [
+   6.48,
+   5.34,
+   6.0
+  ],
+  "folder": "models/25_disco_volante_axolotto"
+ },
+ {
+  "num": 26,
+  "name": "Ghiacciolone Orso Polare",
+  "slug": "ghiacciolone_orso_polare",
+  "rarity": "Mythic",
+  "income": "$200K/s",
+  "concept": "Ours polaire esquimau, lunettes de glace et écharpe, croqué sur un coin.",
+  "triangles": 10356,
+  "voxels": 102467,
+  "size_m": [
+   5.28,
+   2.88,
+   7.44
+  ],
+  "folder": "models/26_ghiacciolone_orso_polare"
+ },
+ {
+  "num": 27,
+  "name": "Razzo Gallinaccio",
+  "slug": "razzo_gallinaccio",
+  "rarity": "Mythic",
+  "income": "$300K/s",
+  "concept": "Poule-fusée au décollage : regard déterminé, écharpe de pilote, poussin au hublot.",
+  "triangles": 29026,
+  "voxels": 142810,
+  "size_m": [
+   3.96,
+   3.96,
+   8.28
+  ],
+  "folder": "models/27_razzo_gallinaccio"
+ },
+ {
+  "num": 28,
+  "name": "Lampadario Fenicione",
+  "slug": "lampadario_fenicione",
+  "rarity": "Divine",
+  "income": "$650K/s",
+  "concept": "Phénix divin aux yeux de lumière, auréole et anneaux de feu, perché sur un lustre de cristal.",
+  "triangles": 43118,
+  "voxels": 78697,
+  "size_m": [
+   7.26,
+   5.04,
+   9.06
+  ],
+  "folder": "models/28_lampadario_fenicione"
+ },
+ {
+  "num": 29,
+  "name": "Clessidra Serpentona",
+  "slug": "clessidra_serpentona",
+  "rarity": "Divine",
+  "income": "$900K/s",
+  "concept": "Serpent émeraude couronné enroulé autour d'un sablier de sable magique lumineux.",
+  "triangles": 50022,
+  "voxels": 236265,
+  "size_m": [
+   4.92,
+   5.52,
+   10.32
+  ],
+  "folder": "models/29_clessidra_serpentona"
+ },
+ {
+  "num": 30,
+  "name": "Glitchino Gattivisore",
+  "slug": "glitchino_gattivisore",
+  "rarity": "Secret",
+  "income": "$2.5M/s",
+  "concept": "Chat-télé glitché : écran pixel, chaîne en or, couronne de pixels et corps qui buggue.",
+  "triangles": 42886,
+  "voxels": 427038,
+  "size_m": [
+   6.24,
+   5.52,
+   11.4
+  ],
+  "folder": "models/30_glitchino_gattivisore"
+ }
+]
