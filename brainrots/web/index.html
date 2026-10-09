@@ -253,7 +253,7 @@ function openViewer(d, from) {
   loadingEl.hidden = false; loadingEl.textContent = "Chargement…";
   if (mesh) { three.scene.remove(mesh); mesh = null; }
   const want = d.num;
-  three.loader.load(`glb/${d.slug}.glb`, g => {
+  three.loader.load(`gltf/${d.slug}.json`, g => {
     if (!current || current.num !== want) return;
     mesh = g.scene;
     mesh.traverse(o => { if (o.isMesh) { o.castShadow = true; } });

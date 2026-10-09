@@ -10,6 +10,26 @@ ROOT = os.path.abspath(os.path.join(HERE, ".."))
 WEB = os.path.join(ROOT, "web")
 
 
+def glb_to_gltf_json(src, dst):
+    """GLB -> self-contained glTF JSON (buffer embedded as base64), served as .json."""
+    import base64
+    import struct
+    data = open(src, "rb").read()
+    assert data[:4] == b"glTF"
+    pos, doc, binary = 12, None, b""
+    while pos < len(data):
+        length, kind = struct.unpack("<I4s", data[pos:pos + 8])
+        chunk = data[pos + 8:pos + 8 + length]
+        if kind == b"JSON":
+            doc = json.loads(chunk.decode("utf-8"))
+        elif kind == b"BIN\x00":
+            binary = chunk
+        pos += 8 + length
+    doc["buffers"][0]["uri"] = "data:application/octet-stream;base64," + base64.b64encode(binary).decode("ascii")
+    with open(dst, "w", encoding="utf-8") as f:
+        json.dump(doc, f, separators=(",", ":"))
+
+
 def main():
     roster = json.load(open(os.path.join(ROOT, "roster.json"), encoding="utf-8"))
     import sys
@@ -21,7 +41,8 @@ def main():
         r["income"] = texts[r["num"]]["income"]
     with open(os.path.join(ROOT, "roster.json"), "w", encoding="utf-8") as f:
         json.dump(roster, f, ensure_ascii=False, indent=1)
-    for sub in ("thumbs", "glb", "tex/mutations"):
+    shutil.rmtree(os.path.join(WEB, "glb"), ignore_errors=True)
+    for sub in ("thumbs", "gltf", "tex/mutations"):
         os.makedirs(os.path.join(WEB, sub), exist_ok=True)
     for r in roster:
         folder = os.path.join(ROOT, r["folder"])
@@ -31,7 +52,7 @@ def main():
         sq = Image.new("RGBA", (side, side), (0, 0, 0, 0))
         sq.alpha_composite(im, ((side - im.width) // 2, (side - im.height) // 2))
         sq.resize((360, 360), Image.LANCZOS).save(os.path.join(WEB, "thumbs", r["slug"] + ".webp"), quality=86)
-        shutil.copy(os.path.join(folder, r["slug"] + ".glb"), os.path.join(WEB, "glb", r["slug"] + ".glb"))
+        glb_to_gltf_json(os.path.join(folder, r["slug"] + ".glb"), os.path.join(WEB, "gltf", r["slug"] + ".json"))
     tex = os.path.join(ROOT, "textures")
     for f in os.listdir(tex):
         if f.endswith(".png"):
