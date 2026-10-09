@@ -94,7 +94,7 @@ def _select_only(obj):
 def export(obj, glb_path, fbx_path):
     _select_only(obj)
     bpy.ops.export_scene.gltf(filepath=glb_path, export_format="GLB", use_selection=True,
-                              export_vertex_color="ACTIVE", export_apply=True)
+                              export_vertex_color="NONE", export_apply=True)
     bpy.ops.export_scene.fbx(filepath=fbx_path, use_selection=True, path_mode="COPY",
                              embed_textures=True, mesh_smooth_type="FACE",
                              add_leaf_bones=False, bake_anim=False)
